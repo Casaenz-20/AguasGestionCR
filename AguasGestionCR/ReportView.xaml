@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AguasGestionCR"
         mc:Ignorable="d"
-        Title="ReportView" Height="691" Width="1059">
+        Title="ReportView" Height="654" Width="1059">
     <Window.Resources>
         <!-- Estilo general para Cajas de Texto (TextBox) -->
         <Style x:Key="ModernTextBox" TargetType="TextBox">
