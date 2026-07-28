@@ -21,5 +21,14 @@ namespace AguasGestionCR
         {
             InitializeComponent();
         }
+
+        private void BtnEnviar_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void BtnCancelar_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }
