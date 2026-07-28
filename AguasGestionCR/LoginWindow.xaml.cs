@@ -1,4 +1,5 @@
 ﻿using AguasGestionCR;
+using AguasGestionCR.Models;
 using AguasGestionCR.Services;
 using AguasGestionCR.Views;
 using System.Windows;
@@ -31,17 +32,36 @@ namespace AcueductoApp.Views
 
             if (usuarioValido != null)
             {
-                MessageBox.Show($"¡Bienvenido {usuarioValido.NombreCompleto}!", "Acceso Concedido", MessageBoxButton.OK, MessageBoxImage.Information);
+                if (txtUsuario.Text.Trim().StartsWith("@admin", StringComparison.OrdinalIgnoreCase))
+                {
+                    UsuarioSesion.Rol = "Administrador";
+                    UsuarioSesion.usuario = usuarioValido.NombreCompleto;
+                    UsuarioSesion.correo = usuarioValido.CorreoElectronico;
 
-                // Abrir la ventana principal del sistema
-                MainWindow main = new MainWindow();
-                main.Show();
-                this.Close();
+                    MessageBox.Show($"¡Bienvenido Administrador {usuarioValido.NombreCompleto}!", "Acceso Concedido", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    WindowAdmin menu_admin = new WindowAdmin();
+                    menu_admin.Show();
+                    this.Close();
+                }
+                else
+                {
+                    UsuarioSesion.Rol = "Usuario";
+                    UsuarioSesion.usuario = usuarioValido.NombreCompleto;
+                    UsuarioSesion.correo = usuarioValido.CorreoElectronico;
+
+                    MessageBox.Show($"¡Bienvenido {usuarioValido.NombreCompleto}!", "Acceso Concedido", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    MainWindow menu_cliente = new MainWindow();
+                    menu_cliente.Show();
+                    this.Close();
+                }
             }
             else
             {
                 MessageBox.Show("Nombre de usuario o contraseña incorrectos.", "Error de Autenticación", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
         }
 
         private void btnCrearCuenta_Click(object sender, RoutedEventArgs e)
