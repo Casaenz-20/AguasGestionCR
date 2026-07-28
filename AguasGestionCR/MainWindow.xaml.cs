@@ -19,6 +19,8 @@ namespace AguasGestionCR
         public MainWindow()
         {
             InitializeComponent();
+
+            txtFechaActual.Text = $"📅  {DateTime.Now.ToString("dd/MM/yyyy")}";
         }
     }
 }

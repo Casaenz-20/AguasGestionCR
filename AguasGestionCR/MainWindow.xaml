@@ -5,8 +5,246 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AguasGestionCR"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="832" Width="1140">
+    <Window.Resources>
+        <!-- Estilos para botones del menú -->
+        <Style x:Key="SidebarButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#D0E1F9"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="20,0,0,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1C3D5A"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
+        <Style x:Key="ActiveSidebarButton" TargetType="Button" BasedOn="{StaticResource SidebarButton}">
+            <Setter Property="Background" Value="#0F4C81"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <!-- Estilos para Tarjetas (Cards) -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="10" Color="#000000" Opacity="0.05" Direction="270" ShadowDepth="2"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <!-- Menú Lateral -->
+            <ColumnDefinition Width="230"/>
+            <!-- Contenido Principal -->
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ==================== MENÚ LATERAL ==================== -->
+        <Border Grid.Column="0" Background="#0A2540">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+
+                <!-- Logo del Acueducto -->
+                <StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="💧" FontSize="32" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="ACUEDUCTO" Foreground="White" FontWeight="Bold" FontSize="16"/>
+                        <TextBlock Text="Portal del Cliente" Foreground="#8FA3BF" FontSize="11"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Menú Simplificado: Solo Estado y Averías -->
+                <StackPanel Grid.Row="1" Margin="0,10,0,0">
+                    <Button Content="🏠   Estado del Servicio" Style="{StaticResource ActiveSidebarButton}"/>
+                    <Button Content="⚠️   Reportar Avería" Style="{StaticResource SidebarButton}"/>
+                </StackPanel>
+
+                <!-- Cerrar Sesión -->
+                <Button Grid.Row="2" Content="🚪   Cerrar Sesión" Style="{StaticResource SidebarButton}" Margin="0,0,0,20"/>
+
+                <!-- Estado del sistema -->
+                <StatusBar Grid.Row="3" Background="#06182B" Foreground="#8FA3BF" FontSize="11">
+                    <StatusBarItem Content="🟢 Conectado"/>
+                    <StatusBarItem Content="v1.0.0" HorizontalAlignment="Right"/>
+                </StatusBar>
+            </Grid>
+        </Border>
+
+        <!-- ==================== CONTENIDO PRINCIPAL ==================== -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="35"/>
+            </Grid.RowDefinitions>
+
+            <!-- Encabezado -->
+            <Border Grid.Row="0" Background="#FFFFFF" BorderBrush="#E5E9F2" BorderThickness="0,0,0,1">
+                <Grid Margin="20,0">
+                    <TextBlock Text="Atención al Abonado" FontSize="16" FontWeight="Bold" Foreground="#333333" VerticalAlignment="Center"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <TextBlock Text="👤  Cliente Conectado" FontSize="13" Foreground="#555555" Margin="0,0,20,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="txtFechaActual" FontSize="13" Foreground="#555555" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Panel Central -->
+            <Grid Grid.Row="1" Margin="15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- TARJETAS SUPERIORES DE ESTADO RÁPIDO -->
+                <UniformGrid Grid.Row="0" Columns="2">
+                    <!-- Estado actual -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🚰" FontSize="36" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Estado Actual de la Red" Foreground="#888888" FontSize="12"/>
+                                <TextBlock Text="Servicio Normal / Activo" Foreground="#2ECC71" FontSize="18" FontWeight="Bold" Margin="0,2,0,0"/>
+                                <TextBlock Text="Sin suspensiones programadas en su sector" Foreground="#777777" FontSize="11"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Mis reportes -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📋" FontSize="36" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Mis Averías Reportadas" Foreground="#888888" FontSize="12"/>
+                                <TextBlock Text="0 Pendientes" Foreground="#3498DB" FontSize="18" FontWeight="Bold" Margin="0,2,0,0"/>
+                                <TextBlock Text="No hay reportes de avería activos" Foreground="#777777" FontSize="11"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </UniformGrid>
+
+                <!-- SECCIÓN PRINCIPAL: MESA DE TRABAJO DEL CLIENTE -->
+                <Grid Grid.Row="1" Margin="0,5,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.2*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Izquierda: Formulario Directo / Botón de Avería -->
+                    <Border Grid.Column="0" Style="{StaticResource CardStyle}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0">
+                                <TextBlock Text="¡Bienvenido a su Portal del Agua!" FontSize="18" FontWeight="Bold" Foreground="#0A2540"/>
+                                <TextBlock Text="Consulte la información de la red de agua o informe sobre cualquier fuga o avería en su sector." 
+                                           TextWrapping="Wrap" Foreground="#666666" Margin="0,5,0,15"/>
+                            </StackPanel>
+
+                            <!-- Imagen / Banner ilustrativo -->
+                            <Border Grid.Row="1" Background="#EBF5FB" CornerRadius="8" Margin="0,0,0,15">
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock Text="💧" FontSize="45" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Agua limpia y continua para su hogar" Foreground="#1B4F72" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Acciones Principales -->
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Botón Destacado: Reportar Avería -->
+                                <Button Grid.Column="0" Height="55" Margin="0,0,5,0" Background="#FDEDEC" BorderBrush="#FADBD8" BorderThickness="1.5">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="⚠️" FontSize="20" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Reportar Avería" Foreground="#C0392B" FontWeight="Bold" FontSize="13" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <!-- Botón: Consultar Estado de Red -->
+                                <Button Grid.Column="1" Height="55" Margin="5,0,0,0" Background="#EBF5FB" BorderBrush="#D4E6F1" BorderThickness="1.5">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="📊" FontSize="20" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Ver Estado Red" Foreground="#2471A3" FontWeight="Bold" FontSize="13" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                    <!-- Derecha: Información del Servicio -->
+                    <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                <TextBlock Text="ℹ️" FontSize="18" Margin="0,0,8,0"/>
+                                <TextBlock Text="Detalles del Servicio de Agua" FontWeight="Bold" FontSize="15" Foreground="#0A2540" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <!-- Punto 1 -->
+                            <Border Background="#F8F9F9" Padding="12" CornerRadius="6" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="Cobertura y Presión" FontWeight="Bold" FontSize="12" Foreground="#333"/>
+                                    <TextBlock Text="Red operando a presión óptima en todo el sector urbano." FontSize="11" Foreground="#666" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Punto 2 -->
+                            <Border Background="#F8F9F9" Padding="12" CornerRadius="6" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="Horarios de Atención Telefónica" FontWeight="Bold" FontSize="12" Foreground="#333"/>
+                                    <TextBlock Text="Lunes a Viernes de 7:00 AM a 4:00 PM para consultas de cuenta." FontSize="11" Foreground="#666" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Punto 3 -->
+                            <Border Background="#F8F9F9" Padding="12" CornerRadius="6" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="Atención de Averías 24/7" FontWeight="Bold" FontSize="12" Foreground="#333"/>
+                                    <TextBlock Text="Los reportes enviados por esta plataforma se asignan de inmediato a las cuadrillas de turno." FontSize="11" Foreground="#666" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Banner Inferior -->
+                            <Border Background="#EBF5FB" Padding="12" CornerRadius="6" Margin="0,10,0,0">
+                                <TextBlock Text="Por favor reporte cualquier fuga en la vía pública para evitar el desperdicio de agua." 
+                                           FontSize="11" Foreground="#1B4F72" TextWrapping="Wrap" TextAlignment="Center" FontWeight="SemiBold"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+
+            <!-- Pie de página -->
+            <Border Grid.Row="2" Background="#FFFFFF" BorderBrush="#E5E9F2" BorderThickness="0,1,0,0">
+                <TextBlock Text="© 2026 Sistema de Gestión del Acueducto" Foreground="#888888" FontSize="11" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0"/>
+            </Border>
+        </Grid>
     </Grid>
 </Window>
