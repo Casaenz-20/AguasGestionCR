@@ -1,0 +1,45 @@
+﻿<Window x:Class="AcueductoApp.Views.CrearUsuarioWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Crear Usuario" Height="580" Width="450"
+        WindowStartupLocation="CenterScreen" Background="#F8FAFC">
+
+    <StackPanel Margin="20">
+
+        <TextBlock Text="Crear Usuario" FontSize="20" FontWeight="Bold" Margin="0,0,0,5"/>
+        <TextBlock Text="El medidor debe estar asociado a la identificación." 
+                   Foreground="#2563EB" TextWrapping="Wrap" Margin="0,0,0,15"/>
+
+        <TextBlock Text="Nombre completo *"/>
+        <TextBox x:Name="txtNombre" Height="28" Margin="0,2,0,10"/>
+
+        <TextBlock Text="Identificación *"/>
+        <TextBox x:Name="txtIdentificacion" Height="28" Margin="0,2,0,10"/>
+
+        <TextBlock Text="Número de medidor *"/>
+        <TextBox x:Name="txtMedidor" Height="28" Margin="0,2,0,10"/>
+
+        <TextBlock Text="Correo electrónico"/>
+        <TextBox x:Name="txtCorreo" Height="28" Margin="0,2,0,10"/>
+
+        <TextBlock Text="Nombre de usuario *"/>
+        <TextBox x:Name="txtUsuario" Height="28" Margin="0,2,0,10"/>
+
+        <TextBlock Text="Contraseña *"/>
+        <PasswordBox x:Name="txtClave" Height="28" Margin="0,2,0,10"/>
+
+        <TextBlock Text="Confirmar contraseña *"/>
+        <PasswordBox x:Name="txtConfirmarClave" Height="28" Margin="0,2,0,15"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+
+            <Button Content="Cancelar" Width="90" Height="32" Margin="0,0,10,0" 
+            Click="btnCancelar_Click"/>
+            <Button Content="Guardar" Width="90" Height="32" Background="#2563EB" Foreground="White" 
+            FontWeight="Bold" 
+            Click="btnGuardar_Click"/>
+
+        </StackPanel>
+
+    </StackPanel>
+</Window>
