@@ -1,32 +1,210 @@
 ﻿<Window x:Class="AcueductoApp.Views.LoginWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Sistema de Gestión del Acueducto - Iniciar Sesión" Height="450" Width="400"
-        WindowStartupLocation="CenterScreen" Background="#F8FAFC">
+        Title="Sistema de Gestión del Acueducto"
+        Height="650"
+        Width="900"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        WindowStyle="SingleBorderWindow">
 
-    <Grid Margin="30">
-        <StackPanel VerticalAlignment="Center">
 
-            <TextBlock Text="Iniciar Sesión" FontSize="24" FontWeight="Bold" Foreground="#1E293B" HorizontalAlignment="Center"/>
-            <TextBlock Text="Ingrese sus credenciales para continuar" FontSize="12" Foreground="#64748B" HorizontalAlignment="Center" Margin="0,5,0,25"/>
+    <Window.Resources>
 
-           
-            <TextBlock Text="Nombre de usuario" FontWeight="SemiBold" Margin="0,0,0,5"/>
-            <TextBox x:Name="txtUsuario" Height="38" Padding="8" VerticalContentAlignment="Center" Margin="0,0,0,15"/>
+        <!-- Botón principal -->
 
-            
-            <TextBlock Text="Contraseña" FontWeight="SemiBold" Margin="0,0,0,5"/>
-            <PasswordBox x:Name="txtContrasena" Height="38" Padding="8" VerticalContentAlignment="Center" Margin="0,0,0,20"/>
+        <Style TargetType="Button" x:Key="BotonAzul">
 
-           
-            <Button Content="Ingresar" Height="40" Background="#2563EB" Foreground="White" 
-                    FontSize="14" FontWeight="Bold" Click="btnIngresar_Click"/>
-            
-            <Button Content="¿Olvidaste tu contraseña?" Margin="0,15,0,0" Background="Transparent" 
-            BorderThickness="0" Foreground="#2563EB" Cursor="Hand" Click="btnOlvidarContrasena_Click"/>
-            
-            <Button Content="¿No tienes cuenta? Crear usuario" Margin="0,15,0,0" Background="Transparent" 
-                    BorderThickness="0" Foreground="#2563EB" Cursor="Hand" Click="btnCrearCuenta_Click"/>
-        </StackPanel>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#0284C7"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <Setter Property="Template">
+
+                <Setter.Value>
+
+                    <ControlTemplate TargetType="Button">
+
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="10">
+
+                            <ContentPresenter
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"/>
+
+                        </Border>
+
+                    </ControlTemplate>
+
+                </Setter.Value>
+
+            </Setter>
+
+            <Style.Triggers>
+
+                <Trigger Property="IsMouseOver" Value="True">
+
+                    <Setter Property="Background"
+                            Value="#0369A1"/>
+
+                </Trigger>
+
+            </Style.Triggers>
+
+        </Style>
+
+    </Window.Resources>
+
+    <Grid Height="640" VerticalAlignment="Top" RenderTransformOrigin="0.443,0.511">
+
+        <Grid.Background>
+
+            <LinearGradientBrush
+                StartPoint="0,0"
+                EndPoint="1,1">
+
+                <GradientStop Color="#E0F2FE"
+                              Offset="0"/>
+
+                <GradientStop Color="#FFFFFF"
+                              Offset="1"/>
+
+            </LinearGradientBrush>
+
+        </Grid.Background>
+
+
+
+
+
+
+
+        <Border
+            Width="360"
+            Padding="35"
+            Margin="35,82,35,0"
+            Background="White"
+            CornerRadius="18"
+            VerticalAlignment="Top" Grid.Column="1">
+
+            <Border.Effect>
+
+                <DropShadowEffect
+                    BlurRadius="20"
+                    ShadowDepth="3"
+                    Opacity="0.25"/>
+
+            </Border.Effect>
+
+            <StackPanel>
+
+                <!-- Logo -->
+
+                <TextBlock
+                    Text="💧"
+                    FontSize="55"
+                    HorizontalAlignment="Center"/>
+
+                <TextBlock
+                    Text="Bienvenido"
+                    FontSize="28"
+                    FontWeight="Bold"
+                    HorizontalAlignment="Center"
+                    Margin="0,10"/>
+
+                <TextBlock
+                    Text="Ingrese sus credenciales"
+                    FontSize="13"
+                    Foreground="Gray"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,30"/>
+
+                <!-- Usuario -->
+
+                <TextBlock
+                    Text="Usuario"
+                    FontWeight="SemiBold"/>
+
+                <Border
+                    Background="#F8FAFC"
+                    CornerRadius="8"
+                    Margin="0,6,0,18"
+                    BorderBrush="#CBD5E1"
+                    BorderThickness="1">
+
+                    <TextBox
+                        x:Name="txtUsuario"
+                        BorderThickness="0"
+                        Background="Transparent"
+                        FontSize="15"
+                        Padding="12"/>
+
+                </Border>
+
+                <!-- Contraseña -->
+
+                <TextBlock
+                    Text="Contraseña"
+                    FontWeight="SemiBold"/>
+
+                <Border
+                    Background="#F8FAFC"
+                    CornerRadius="8"
+                    Margin="0,6,0,25"
+                    BorderBrush="#CBD5E1"
+                    BorderThickness="1">
+
+                    <PasswordBox
+                        x:Name="txtContrasena"
+                        BorderThickness="0"
+                        Background="Transparent"
+                        FontSize="15"
+                        Padding="12"/>
+
+                </Border>
+
+                <!-- Botón -->
+
+                <Button
+                    Content="Iniciar Sesión"
+                    Style="{StaticResource BotonAzul}"
+                    Click="btnIngresar_Click"/>
+
+                <!-- Links -->
+
+                <Button
+                    Content="¿Olvidó su contraseña?"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Foreground="#0284C7"
+                    Cursor="Hand"
+                    Margin="0,18,0,0"
+                    Click="btnOlvidarContrasena_Click"/>
+
+                <Button
+                    Content="Crear una cuenta"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Foreground="#0284C7"
+                    Cursor="Hand"
+                    Click="btnCrearCuenta_Click"/>
+
+                <Separator Margin="0,20"/>
+
+                <TextBlock
+                    Text="Versión 1.0"
+                    HorizontalAlignment="Center"
+                    Foreground="Gray"/>
+
+            </StackPanel>
+
+        </Border>
+
     </Grid>
+
 </Window>
