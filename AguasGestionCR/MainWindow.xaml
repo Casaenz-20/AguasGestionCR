@@ -83,8 +83,7 @@
 
                 <!-- Estado del sistema -->
                 <StatusBar Grid.Row="3" Background="#06182B" Foreground="#8FA3BF" FontSize="11">
-                    <StatusBarItem Content="🟢 Conectado"/>
-                    <StatusBarItem Content="v1.0.0" HorizontalAlignment="Right"/>
+                    <StatusBarItem Content="v1.0.0" HorizontalAlignment="Left" Width="55"/>
                 </StatusBar>
             </Grid>
         </Border>
