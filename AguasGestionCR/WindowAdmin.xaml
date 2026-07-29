@@ -75,6 +75,7 @@
                     <Button Content="🏠   Inicio" Style="{StaticResource ActiveSidebarButton}"/>
                     <Button Content="⚠️   Reportar avería" Style="{StaticResource SidebarButton}"/>
                     <Button Content="📦   Inventario público" Style="{StaticResource SidebarButton}"/>
+                    <Button Content="👥   Clientes" Style="{StaticResource SidebarButton}"/>
                 </StackPanel>
 
                 <!-- Cerrar Sesión -->
