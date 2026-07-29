@@ -5,9 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AguasGestionCR"
         mc:Ignorable="d"
-        Title="ReportView" Height="654" Width="1059">
+        Title="ReportView" Height="654" Width="1059" Loaded="Window_Loaded">
     <Window.Resources>
-        <!-- Estilo general para Cajas de Texto (TextBox) -->
         <Style x:Key="ModernTextBox" TargetType="TextBox">
             <Setter Property="Height" Value="38"/>
             <Setter Property="FontSize" Value="13"/>
@@ -89,7 +88,7 @@
                         <!-- Número de NISE / Cuenta -->
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="Número de Medidor*" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,5"/>
-                            <TextBox x:Name="txtNise" Style="{StaticResource ModernTextBox}" ToolTip="Ej: 1029384"/>
+                            <TextBox x:Name="txtMedidor" Style="{StaticResource ModernTextBox}" ToolTip="Ej: 1029384"/>
                         </StackPanel>
 
                         <!-- Tipo de Avería -->
@@ -115,8 +114,8 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0">
-                            <TextBlock Text="Teléfono de Contacto *" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,5"/>
-                            <TextBox x:Name="txtTelefono" Style="{StaticResource ModernTextBox}"/>
+                            <TextBlock Text="Correo*" FontWeight="SemiBold" Foreground="#333" Margin="0,0,0,5"/>
+                            <TextBox x:Name="txtCorreo" Style="{StaticResource ModernTextBox}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="2">

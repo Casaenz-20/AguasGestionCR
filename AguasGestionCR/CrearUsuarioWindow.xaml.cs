@@ -57,7 +57,7 @@ namespace AcueductoApp.Views
                     CorreoElectronico = txtCorreo.Text.Trim(),
                     NombreUsuario = txtUsuario.Text.Trim(),
                     ContrasenaHash = BCrypt.Net.BCrypt.HashPassword(txtClave.Password), 
-                    Rol = "Cliente",
+                    Rol = cmbRol.SelectedItem.ToString(),
                     Estado = true,
                     FechaCreacion = DateTime.Now
                 };
@@ -72,7 +72,9 @@ namespace AcueductoApp.Views
 
         private void btnCancelar_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            LoginWindow login = new LoginWindow();
+            login.Show();  
+            this.Hide();
         }
     }
 }
