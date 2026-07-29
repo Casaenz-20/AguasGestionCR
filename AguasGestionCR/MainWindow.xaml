@@ -75,7 +75,7 @@
                 <!-- Menú Simplificado: Solo Estado y Averías -->
                 <StackPanel Grid.Row="1" Margin="0,10,0,0">
                     <Button Content="🏠   Estado del Servicio" Style="{StaticResource ActiveSidebarButton}"/>
-                    <Button Content="⚠️   Reportar Avería" Style="{StaticResource SidebarButton}"/>
+                    <Button x:Name="btnReportarAveria" Content="⚠️   Reportar Avería" Style="{StaticResource SidebarButton}" Click="btnReportarAveria_Click"/>
                     <Button Content="👤   Clientes" Style="{StaticResource SidebarButton}"/>
                     <Button Content="▣   Inventario" Style="{StaticResource SidebarButton}"/>
                 </StackPanel>

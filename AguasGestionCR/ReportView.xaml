@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AguasGestionCR"
         mc:Ignorable="d"
-        Title="ReportView" Height="654" Width="1059" >
+        Title="ReportView" Height="654" Width="1059" Loaded="Window_Loaded">
     <Window.Resources>
         <Style x:Key="ModernTextBox" TargetType="TextBox">
             <Setter Property="Height" Value="38"/>
@@ -157,7 +157,7 @@
                         <!-- Botón Enviar Reporte -->
                         <Button Grid.Column="2" Content="Enviar Reporte" Width="140" Height="40" 
                                 Background="#C0392B" Foreground="White" FontWeight="Bold" 
-                                BorderThickness="0" Cursor="Hand" Click="BtnEnviar_Click"/>
+                                BorderThickness="0" Cursor="Hand" Click="Button_Click" />
                     </Grid>
 
                 </Grid>
