@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Net;
 using System.Net.Mail;
+using AguasGestionCR.Services;
 
 namespace AguasGestionCR
 {
@@ -66,7 +67,7 @@ namespace AguasGestionCR
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
+            UsuarioSesion.correo = txtCorreo.Text;
         }
     }
 }
