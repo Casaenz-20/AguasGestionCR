@@ -21,14 +21,25 @@ namespace AguasGestionCR
         {
             InitializeComponent();
         }
-        private void Editar_Click(object sender, RoutedEventArgs e)
+
+        private void BtnAdjuntarPDF_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Editar");
+
         }
 
-        private void Eliminar_Click(object sender, RoutedEventArgs e)
+        private void BtnGuardar_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Eliminar");
+
+        }
+
+        private void BtnCancelar_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnLimpiar_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
