@@ -189,7 +189,6 @@
                                     </StackPanel>
                                 </Button>
 
-                                <!-- Botón: Consultar Estado de Red -->
                             </Grid>
                         </Grid>
                     </Border>
