@@ -1,0 +1,111 @@
+﻿<Window x:Class="AguasGestionCR.Clientes"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Registrar / Editar Cliente" Height="728" Width="680"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="#F3F4F6">
+
+    <Grid Margin="20">
+        <Border Background="White" CornerRadius="10" Padding="25">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Cabecera -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
+                    <TextBlock Text="👥" FontSize="20" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="Registrar / Editar Cliente" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="#1F2937"/>
+                </StackPanel>
+
+                <TextBlock Grid.Row="1" Text="Información del cliente" FontWeight="Bold" Foreground="#4B5563" Margin="0,0,0,10"/>
+
+                <!-- Formulario -->
+                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <!-- Nombre Completo -->
+                        <TextBlock Text="Nombre completo" Foreground="#6B7280" FontSize="12" Margin="0,0,0,3"/>
+                        <TextBox x:Name="txtNombreCompleto" Height="35" Padding="8,5" Margin="0,0,0,12" BorderBrush="#D1D5DB" BorderThickness="1"/>
+
+                        <!-- Identificación y Medidor -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Identificación" Foreground="#6B7280" FontSize="12" Margin="0,0,0,3"/>
+                                <TextBox x:Name="txtIdentificacion" Height="35" Padding="8,5" BorderBrush="#D1D5DB" BorderThickness="1"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Número de medidor" Foreground="#6B7280" FontSize="12" Margin="0,0,0,3"/>
+                                <TextBox x:Name="txtNumeroMedidor" Height="35" Padding="8,5" BorderBrush="#D1D5DB" BorderThickness="1"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Dirección -->
+                        <TextBlock Text="Dirección" Foreground="#6B7280" FontSize="12" Margin="0,0,0,3"/>
+                        <TextBox x:Name="txtDireccion" Height="50" AcceptsReturn="True" TextWrapping="Wrap" Padding="8,5" Margin="0,0,0,12" BorderBrush="#D1D5DB" BorderThickness="1"/>
+
+                        <!-- Teléfono y Correo -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Teléfono" Foreground="#6B7280" FontSize="12" Margin="0,0,0,3"/>
+                                <TextBox x:Name="txtTelefono" Height="35" Padding="8,5" BorderBrush="#D1D5DB" BorderThickness="1"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Correo electrónico" Foreground="#6B7280" FontSize="12" Margin="0,0,0,3"/>
+                                <TextBox x:Name="txtCorreo" Height="35" Padding="8,5" BorderBrush="#D1D5DB" BorderThickness="1"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Estado y Estado Prevista -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Estado" Foreground="#6B7280" FontSize="12" Margin="0,0,0,3"/>
+                                <ComboBox x:Name="cmbEstado" Height="35" VerticalContentAlignment="Center">
+                                    <ComboBoxItem Content="Activo" IsSelected="True"/>
+                                    <ComboBoxItem Content="Inactivo"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Estado Prevista" Foreground="#6B7280" FontSize="12" Margin="0,0,0,3"/>
+                                <ComboBox x:Name="cmbEstadoPrevista" Height="35" VerticalContentAlignment="Center">
+                                    <ComboBoxItem Content="Pendiente" IsSelected="True"/>
+                                    <ComboBoxItem Content="Cancelado"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Cédula PDF -->
+                        <StackPanel Margin="0,0,0,10">
+                            <TextBlock Text="Cédula en PDF (Opcional)" Foreground="#6B7280" FontSize="12" Margin="0,0,0,3"/>
+                            <Button x:Name="btnAdjuntarPDF" Content="Seleccionar Archivo PDF..." Height="30" Click="BtnAdjuntarPDF_Click"/>
+                            <TextBlock x:Name="txtArchivoSeleccionado" Text="Ningún archivo seleccionado" FontSize="11" Foreground="#9CA3AF" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Botones de Acción -->
+                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+                    <Button x:Name="btnLimpiar" Content="Limpiar" Width="80" Height="35" Margin="0,0,10,0" Background="White" BorderBrush="#D1D5DB" Click="BtnLimpiar_Click"/>
+                    <Button x:Name="btnCancelar" Content="Cancelar" Width="80" Height="35" Margin="0,0,10,0" Background="White" BorderBrush="#D1D5DB" Click="BtnCancelar_Click"/>
+                    <Button x:Name="btnGuardar" Content="Guardar" Width="90" Height="35" Background="#007ACC" Foreground="White" FontWeight="Bold" Click="BtnGuardar_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

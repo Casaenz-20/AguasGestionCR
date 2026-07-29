@@ -64,7 +64,7 @@ namespace AguasGestionCR.Services
             }
         }
         public Usuario? Autenticar(string nombreUsuario, string contrasenaPlana)
-        {
+        { 
             using (var db = new AcueductoDbContext())
             {
                 var usuario = db.Usuarios.FirstOrDefault(u => u.NombreUsuario == nombreUsuario && u.Estado);
