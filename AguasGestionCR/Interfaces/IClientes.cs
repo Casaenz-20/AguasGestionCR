@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AguasGestionCR.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,9 +7,9 @@ namespace AguasGestionCR.Interfaces
 {
     interface IClientes
     {
-        public int RegistrarCliente(Clientes cliente);
-        public Clientes ObtenerClientePorId(int id);
-        public bool EditarCliente(Clientes cliente);
-        public string EliminarCliente(int id);
+        public int RegistrarCliente(Cliente cliente);
+        public Cliente ObtenerClientePorId(int id);
+        public bool EditarCliente(Cliente cliente);
+        public Cliente EliminarCliente(int id);
     }
 }
