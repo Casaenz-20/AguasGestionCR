@@ -28,10 +28,14 @@ namespace AguasGestionCR
         private void BtnEnviar_Click(object sender, RoutedEventArgs e)
         {
             try
+                 
             {
+                string correoUsuario = UsuarioSesion.correo;
+
                 MailMessage mail = new MailMessage();
-                mail.From = new MailAddress("aguagestioncr@gmail.com");
-                mail.To.Add(new MailAddress(txtCorreo.Text.Trim()));
+                mail.From = new MailAddress(correoUsuario);
+                mail.To.Add(new MailAddress("aguasgestioncr@gmail.com"));
+                mail.ReplyToList.Add(new MailAddress(correoUsuario));
                 mail.Subject = "Reporte de Averias";
                 mail.Body = $"Descripción: {txtDescripcion.Text}\n" +
                 $"Número de medidor: {txtMedidor.Text}\n" +
@@ -65,9 +69,6 @@ namespace AguasGestionCR
             this.Close();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            UsuarioSesion.correo = txtCorreo.Text;
-        }
+        
     }
 }

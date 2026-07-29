@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AguasGestionCR"
         mc:Ignorable="d"
-        Title="ReportView" Height="654" Width="1059" Loaded="Window_Loaded">
+        Title="ReportView" Height="654" Width="1059" >
     <Window.Resources>
         <Style x:Key="ModernTextBox" TargetType="TextBox">
             <Setter Property="Height" Value="38"/>
