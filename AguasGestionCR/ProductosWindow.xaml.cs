@@ -266,91 +266,91 @@ public partial class ProductosWindow : Window
         ActualizarResumen();
     }
 
-    private void BtnNuevo_Click(object sender, RoutedEventArgs e)
-    {
-        var ventana = new ProductoFormWindow
-        {
-            Owner = this
-        };
+    //private void BtnNuevo_Click(object sender, RoutedEventArgs e)
+    //{
+    //    var ventana = new ProductoFormWindow
+    //    {
+    //        Owner = this
+    //    };
 
-        if (ventana.ShowDialog() == true && ventana.ProductoResultado != null)
-        {
-            Producto nuevo = ventana.ProductoResultado;
-            nuevo.ProductoId = _productos.Count == 0
-                ? 1
-                : _productos.Max(p => p.ProductoId) + 1;
+    //    if (ventana.ShowDialog() == true && ventana.ProductoResultado != null)
+    //    {
+    //        Producto nuevo = ventana.ProductoResultado;
+    //        nuevo.ProductoId = _productos.Count == 0
+    //            ? 1
+    //            : _productos.Max(p => p.ProductoId) + 1;
 
-            _productos.Add(nuevo);
-            AplicarFiltros();
-            ActualizarResumen();
-        }
-    }
+    //        _productos.Add(nuevo);
+    //        AplicarFiltros();
+    //        ActualizarResumen();
+    //    }
+    //}
 
-    private void BtnEditar_Click(object sender, RoutedEventArgs e)
-    {
-        AbrirEdicion();
-    }
+    //private void BtnEditar_Click(object sender, RoutedEventArgs e)
+    //{
+    //    AbrirEdicion();
+    //}
 
-    private void DgProductos_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-    {
-        if (ProductoSeleccionado != null)
-        {
-            AbrirEdicion();
-        }
-    }
+    //private void DgProductos_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    //{
+    //    if (ProductoSeleccionado != null)
+    //    {
+    //        AbrirEdicion();
+    //    }
+    //}
 
-    private void AbrirEdicion()
-    {
-        Producto? seleccionado = ProductoSeleccionado;
+    //private void AbrirEdicion()
+    //{
+    //    Producto? seleccionado = ProductoSeleccionado;
 
-        if (seleccionado == null)
-        {
-            MessageBox.Show(
-                "Seleccione un producto para editarlo.",
-                "Producto requerido",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
-            return;
-        }
+    //    if (seleccionado == null)
+    //    {
+    //        MessageBox.Show(
+    //            "Seleccione un producto para editarlo.",
+    //            "Producto requerido",
+    //            MessageBoxButton.OK,
+    //            MessageBoxImage.Information);
+    //        return;
+    //    }
 
-        var copia = new Producto
-        {
-            ProductoId = seleccionado.ProductoId,
-            CodigoProducto = seleccionado.CodigoProducto,
-            Nombre = seleccionado.Nombre,
-            Categoria = seleccionado.Categoria,
-            Descripcion = seleccionado.Descripcion,
-            Cantidad = seleccionado.Cantidad,
-            CantidadMinima = seleccionado.CantidadMinima,
-            Unidad = seleccionado.Unidad,
-            FechaIngreso = seleccionado.FechaIngreso,
-            Estado = seleccionado.Estado
-        };
+    //    var copia = new Producto
+    //    {
+    //        ProductoId = seleccionado.ProductoId,
+    //        CodigoProducto = seleccionado.CodigoProducto,
+    //        Nombre = seleccionado.Nombre,
+    //        Categoria = seleccionado.Categoria,
+    //        Descripcion = seleccionado.Descripcion,
+    //        Cantidad = seleccionado.Cantidad,
+    //        CantidadMinima = seleccionado.CantidadMinima,
+    //        Unidad = seleccionado.Unidad,
+    //        FechaIngreso = seleccionado.FechaIngreso,
+    //        Estado = seleccionado.Estado
+    //    };
 
-        var ventana = new ProductoFormWindow(copia)
-        {
-            Owner = this
-        };
+    //    var ventana = new ProductoFormWindow(copia)
+    //    {
+    //        Owner = this
+    //    };
 
-        if (ventana.ShowDialog() == true && ventana.ProductoResultado != null)
-        {
-            Producto editado = ventana.ProductoResultado;
+    //    if (ventana.ShowDialog() == true && ventana.ProductoResultado != null)
+    //    {
+    //        Producto editado = ventana.ProductoResultado;
 
-            seleccionado.CodigoProducto = editado.CodigoProducto;
-            seleccionado.Nombre = editado.Nombre;
-            seleccionado.Categoria = editado.Categoria;
-            seleccionado.Descripcion = editado.Descripcion;
-            seleccionado.Cantidad = editado.Cantidad;
-            seleccionado.CantidadMinima = editado.CantidadMinima;
-            seleccionado.Unidad = editado.Unidad;
-            seleccionado.FechaIngreso = editado.FechaIngreso;
-            seleccionado.Estado = editado.Estado;
+    //        seleccionado.CodigoProducto = editado.CodigoProducto;
+    //        seleccionado.Nombre = editado.Nombre;
+    //        seleccionado.Categoria = editado.Categoria;
+    //        seleccionado.Descripcion = editado.Descripcion;
+    //        seleccionado.Cantidad = editado.Cantidad;
+    //        seleccionado.CantidadMinima = editado.CantidadMinima;
+    //        seleccionado.Unidad = editado.Unidad;
+    //        seleccionado.FechaIngreso = editado.FechaIngreso;
+    //        seleccionado.Estado = editado.Estado;
 
-            _vistaProductos?.Refresh();
-            ActualizarResumen();
-            ActualizarBotonesSeleccion();
-        }
-    }
+    //        _vistaProductos?.Refresh();
+    //        ActualizarResumen();
+    //        ActualizarBotonesSeleccion();
+    //    }
+    //}
 
     private void BtnCambiarEstado_Click(object sender, RoutedEventArgs e)
     {
@@ -415,6 +415,21 @@ public partial class ProductosWindow : Window
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void BtnNuevo_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void BtnEditar_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void DgProductos_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
 
     }

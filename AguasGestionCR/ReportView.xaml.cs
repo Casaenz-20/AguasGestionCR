@@ -25,13 +25,38 @@ namespace AguasGestionCR
             InitializeComponent();
         }
 
-        private void BtnEnviar_Click(object sender, RoutedEventArgs e)
+       
+
+        private void BtnCancelar_Click(object sender, RoutedEventArgs e)
+        {
+
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
+            this.Close();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show($"Usuario: {UsuarioSesion.usuario}\nCorreo: {UsuarioSesion.correo}\nRol: {UsuarioSesion.Rol}", "Información de Usuario", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            if (UsuarioSesion.Rol == "Usuario")
+            {
+                txtCorreo.Text = "aguagestioncr@gmail.com";
+                txtCorreo.IsReadOnly = true;
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
             try
+
             {
+                string correoUsuario = UsuarioSesion.correo;
+
                 MailMessage mail = new MailMessage();
-                mail.From = new MailAddress("aguagestioncr@gmail.com");
-                mail.To.Add(new MailAddress(txtCorreo.Text.Trim()));
+                mail.From = new MailAddress(correoUsuario);
+                mail.To.Add(new MailAddress("aguagestioncr@gmail.com"));
+                mail.ReplyToList.Add(new MailAddress(correoUsuario));
                 mail.Subject = "Reporte de Averias";
                 mail.Body = $"Descripción: {txtDescripcion.Text}\n" +
                 $"Número de medidor: {txtMedidor.Text}\n" +
@@ -54,20 +79,6 @@ namespace AguasGestionCR
             {
                 MessageBox.Show($"Error al enviar el reporte: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-        }
-
-        private void BtnCancelar_Click(object sender, RoutedEventArgs e)
-        {
-           
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
-            this.Close();
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            UsuarioSesion.correo = txtCorreo.Text;
         }
     }
 }
