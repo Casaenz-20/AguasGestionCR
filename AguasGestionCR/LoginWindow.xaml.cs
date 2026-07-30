@@ -17,51 +17,113 @@ namespace AcueductoApp.Views
             _usuarioService = new UsuarioService(passwordHasher);
         }
 
-        private void btnIngresar_Click(object sender, RoutedEventArgs e)
+        private void btnIngresar_Click(
+     object sender,
+     RoutedEventArgs e)
         {
-            string usuario = txtUsuario.Text.Trim();
-            string contrasena = txtContrasena.Password;
+            string usuario =
+                txtUsuario.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(usuario) || string.IsNullOrWhiteSpace(contrasena))
+            string contrasena =
+                txtContrasena.Password;
+
+            if (string.IsNullOrWhiteSpace(usuario) ||
+                string.IsNullOrWhiteSpace(contrasena))
             {
-                MessageBox.Show("Por favor complete todos los campos.", "Campos requeridos", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(
+                    "Por favor complete todos los campos.",
+                    "Campos requeridos",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+
                 return;
             }
 
-            var usuarioValido = _usuarioService.Autenticar(usuario, contrasena);
+            Usuario? usuarioValido;
 
-            if (usuarioValido != null)
+            try
             {
-                if (txtUsuario.Text.Trim().StartsWith("@admin", StringComparison.OrdinalIgnoreCase))
-                {
-                    UsuarioSesion.Rol = "Administrador";
-                    UsuarioSesion.usuario = usuarioValido.NombreCompleto;
-                    UsuarioSesion.correo = usuarioValido.CorreoElectronico;
-
-                    MessageBox.Show($"¡Bienvenido Administrador {usuarioValido.NombreCompleto}!", "Acceso Concedido", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                    WindowAdmin menu_admin = new WindowAdmin();
-                    menu_admin.Show();
-                    this.Close();
-                }
-                else
-                {
-                    UsuarioSesion.Rol = "Usuario";
-                    UsuarioSesion.usuario = usuarioValido.NombreCompleto;
-                    UsuarioSesion.correo = usuarioValido.CorreoElectronico;
-
-                    MessageBox.Show($"¡Bienvenido {usuarioValido.NombreCompleto}!", "Acceso Concedido", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                    MainWindow menu_cliente = new MainWindow();
-                    menu_cliente.Show();
-                    this.Close();
-                }
+                usuarioValido =
+                    _usuarioService.Autenticar(
+                        usuario,
+                        contrasena);
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Nombre de usuario o contraseña incorrectos.", "Error de Autenticación", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    "No fue posible consultar la base de datos.\n\n" +
+                    ex.GetBaseException().Message,
+                    "Error de conexión",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                return;
             }
 
+            if (usuarioValido == null)
+            {
+                MessageBox.Show(
+                    "Nombre de usuario o contraseña incorrectos.",
+                    "Error de autenticación",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                txtContrasena.Clear();
+                txtContrasena.Focus();
+                return;
+            }
+
+            UsuarioSesion.Rol =
+                usuarioValido.Rol;
+
+            UsuarioSesion.usuario =
+                usuarioValido.NombreCompleto;
+
+            UsuarioSesion.correo =
+                usuarioValido.CorreoElectronico
+                ?? string.Empty;
+
+            bool esAdministrador =
+                string.Equals(
+                    usuarioValido.Rol?.Trim(),
+                    "Administrador",
+                    StringComparison.OrdinalIgnoreCase);
+
+            bool esCliente =
+                string.Equals(
+                    usuarioValido.Rol?.Trim(),
+                    "Cliente",
+                    StringComparison.OrdinalIgnoreCase);
+
+            if (!esAdministrador && !esCliente)
+            {
+                MessageBox.Show(
+                    $"El usuario tiene un rol no reconocido: " +
+                    $"'{usuarioValido.Rol}'.",
+                    "Rol no válido",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+
+                return;
+            }
+
+            MessageBox.Show(
+                esAdministrador
+                    ? $"¡Bienvenido Administrador " +
+                      $"{usuarioValido.NombreCompleto}!"
+                    : $"¡Bienvenido " +
+                      $"{usuarioValido.NombreCompleto}!",
+                "Acceso concedido",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            Window ventanaDestino =
+                esAdministrador
+                    ? new WindowAdmin()
+                    : new MainWindow();
+
+            ventanaDestino.Show();
+            Close();
         }
 
         private void btnCrearCuenta_Click(object sender, RoutedEventArgs e)
