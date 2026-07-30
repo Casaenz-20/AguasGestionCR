@@ -210,107 +210,91 @@ public partial class ProductosWindow : Window
         CargarProductos(productoId);
     }
 
-    private void BtnNuevo_Click(object sender, RoutedEventArgs e)
-    {
-        var ventana = new ProductoFormWindow
-        {
-            Owner = this
-        };
+    //private void BtnNuevo_Click(object sender, RoutedEventArgs e)
+    //{
+    //    var ventana = new ProductoFormWindow
+    //    {
+    //        Owner = this
+    //    };
 
-        if (ventana.ShowDialog() != true ||
-            ventana.ProductoResultado == null)
-        {
-            return;
-        }
+    //    if (ventana.ShowDialog() == true && ventana.ProductoResultado != null)
+    //    {
+    //        Producto nuevo = ventana.ProductoResultado;
+    //        nuevo.ProductoId = _productos.Count == 0
+    //            ? 1
+    //            : _productos.Max(p => p.ProductoId) + 1;
 
-        Producto nuevoProducto = ventana.ProductoResultado;
+    //        _productos.Add(nuevo);
+    //        AplicarFiltros();
+    //        ActualizarResumen();
+    //    }
+    //}
 
-        (bool exito, string mensaje) =
-            _productoService.CrearProducto(nuevoProducto);
+    //private void BtnEditar_Click(object sender, RoutedEventArgs e)
+    //{
+    //    AbrirEdicion();
+    //}
 
-        MessageBox.Show(
-            mensaje,
-            exito ? "Producto registrado" : "No se pudo registrar",
-            MessageBoxButton.OK,
-            exito ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    //private void DgProductos_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    //{
+    //    if (ProductoSeleccionado != null)
+    //    {
+    //        AbrirEdicion();
+    //    }
+    //}
 
-        if (exito)
-        {
-            CargarProductos(nuevoProducto.ProductoId);
-        }
-    }
+    //private void AbrirEdicion()
+    //{
+    //    Producto? seleccionado = ProductoSeleccionado;
 
-    private void BtnEditar_Click(object sender, RoutedEventArgs e)
-    {
-        AbrirEdicion();
-    }
+    //    if (seleccionado == null)
+    //    {
+    //        MessageBox.Show(
+    //            "Seleccione un producto para editarlo.",
+    //            "Producto requerido",
+    //            MessageBoxButton.OK,
+    //            MessageBoxImage.Information);
+    //        return;
+    //    }
 
-    private void DgProductos_MouseDoubleClick(
-        object sender,
-        MouseButtonEventArgs e)
-    {
-        if (ProductoSeleccionado != null)
-        {
-            AbrirEdicion();
-        }
-    }
+    //    var copia = new Producto
+    //    {
+    //        ProductoId = seleccionado.ProductoId,
+    //        CodigoProducto = seleccionado.CodigoProducto,
+    //        Nombre = seleccionado.Nombre,
+    //        Categoria = seleccionado.Categoria,
+    //        Descripcion = seleccionado.Descripcion,
+    //        Cantidad = seleccionado.Cantidad,
+    //        CantidadMinima = seleccionado.CantidadMinima,
+    //        Unidad = seleccionado.Unidad,
+    //        FechaIngreso = seleccionado.FechaIngreso,
+    //        Estado = seleccionado.Estado
+    //    };
 
-    private void AbrirEdicion()
-    {
-        Producto? seleccionado = ProductoSeleccionado;
+    //    var ventana = new ProductoFormWindow(copia)
+    //    {
+    //        Owner = this
+    //    };
 
-        if (seleccionado == null)
-        {
-            MessageBox.Show(
-                "Seleccione un producto para editarlo.",
-                "Producto requerido",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
-            return;
-        }
+    //    if (ventana.ShowDialog() == true && ventana.ProductoResultado != null)
+    //    {
+    //        Producto editado = ventana.ProductoResultado;
 
-        Producto? productoActual =
-            _productoService.ObtenerProductoPorId(seleccionado.ProductoId);
+    //        seleccionado.CodigoProducto = editado.CodigoProducto;
+    //        seleccionado.Nombre = editado.Nombre;
+    //        seleccionado.Categoria = editado.Categoria;
+    //        seleccionado.Descripcion = editado.Descripcion;
+    //        seleccionado.Cantidad = editado.Cantidad;
+    //        seleccionado.CantidadMinima = editado.CantidadMinima;
+    //        seleccionado.Unidad = editado.Unidad;
+    //        seleccionado.FechaIngreso = editado.FechaIngreso;
+    //        seleccionado.Estado = editado.Estado;
 
-        if (productoActual == null)
-        {
-            MessageBox.Show(
-                "El producto seleccionado ya no existe en la base de datos.",
-                "Producto no encontrado",
-                MessageBoxButton.OK,
-                MessageBoxImage.Warning);
-
-            CargarProductos();
-            return;
-        }
-
-        var ventana = new ProductoFormWindow(productoActual)
-        {
-            Owner = this
-        };
-
-        if (ventana.ShowDialog() != true ||
-            ventana.ProductoResultado == null)
-        {
-            return;
-        }
-
-        Producto productoEditado = ventana.ProductoResultado;
-
-        (bool exito, string mensaje) =
-            _productoService.ActualizarProducto(productoEditado);
-
-        MessageBox.Show(
-            mensaje,
-            exito ? "Producto actualizado" : "No se pudo actualizar",
-            MessageBoxButton.OK,
-            exito ? MessageBoxImage.Information : MessageBoxImage.Warning);
-
-        if (exito)
-        {
-            CargarProductos(productoEditado.ProductoId);
-        }
-    }
+    //        _vistaProductos?.Refresh();
+    //        ActualizarResumen();
+    //        ActualizarBotonesSeleccion();
+    //    }
+    //}
 
     private void BtnCambiarEstado_Click(object sender, RoutedEventArgs e)
     {
@@ -386,5 +370,25 @@ public partial class ProductosWindow : Window
         var login = new LoginWindow();
         login.Show();
         Close();
+    }
+
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void BtnNuevo_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void BtnEditar_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void DgProductos_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+
     }
 }

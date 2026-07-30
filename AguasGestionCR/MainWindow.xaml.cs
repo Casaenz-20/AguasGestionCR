@@ -22,5 +22,16 @@ namespace AguasGestionCR
 
             txtFechaActual.Text = $"📅  {DateTime.Now.ToString("dd/MM/yyyy")}";
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnReportarAveria_Click(object sender, RoutedEventArgs e)
+        {
+            ReportView reportView = new ReportView();
+            reportView.Show();
+        }
     }
 }
