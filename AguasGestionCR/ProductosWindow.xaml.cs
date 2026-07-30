@@ -1,27 +1,31 @@
 using AcueductoApp.Views;
 using AguasGestionCR.Models;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+using AguasGestionCR.Services;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace AguasGestionCR;
 
 /// <summary>
-/// Prototipo visual temporal del módulo de inventario.
-/// Trabaja en memoria para permitir diseñar y probar la interfaz
-/// antes de conectar IProductoService y SQL Server.
+/// Ventana administrativa del inventario.
+/// La interfaz obtiene y modifica los datos por medio de IProductoService;
+/// no accede directamente a Entity Framework ni a SQL Server.
 /// </summary>
 public partial class ProductosWindow : Window
 {
-    private readonly ObservableCollection<Producto> _productos = new();
-    private ICollectionView? _vistaProductos;
+    private readonly IProductoService _productoService;
+    private List<Producto> _productosMostrados = new();
 
     public ProductosWindow()
+        : this(new ProductoService())
+    {
+    }
+
+    internal ProductosWindow(IProductoService productoService)
     {
         InitializeComponent();
+        _productoService = productoService;
     }
 
     private Producto? ProductoSeleccionado =>
@@ -31,10 +35,7 @@ public partial class ProductosWindow : Window
     {
         TxtFechaActual.Text = DateTime.Now.ToString("dd/MM/yyyy");
         CargarFiltrosVisuales();
-        CargarDatosDemostracion();
-        ConfigurarVistaFiltrada();
-        ActualizarResumen();
-        ActualizarBotonesSeleccion();
+        CargarProductos();
     }
 
     private void CargarFiltrosVisuales()
@@ -43,10 +44,10 @@ public partial class ProductosWindow : Window
         {
             "Todas",
             "Materiales hidráulicos",
-            "Medición y control",
-            "Válvulas y control",
+            "Medición y Control",
+            "Válvulas y Control",
             "Consumibles",
-            "Químicos y tratamiento",
+            "Químicos y Tratamiento",
             "Herramientas",
             "Otros"
         };
@@ -56,123 +57,57 @@ public partial class ProductosWindow : Window
     }
 
     /// <summary>
-    /// Datos temporales únicamente para poder visualizar el diseño.
-    /// Se eliminarán cuando ProductosWindow use ProductoService.
+    /// Consulta SQL Server aplicando los filtros visibles y actualiza
+    /// la tabla, las tarjetas de resumen y los botones de selección.
     /// </summary>
-    private void CargarDatosDemostracion()
+    private void CargarProductos(int? productoIdSeleccionar = null)
     {
-        if (_productos.Count > 0)
+        try
         {
-            return;
+            string busqueda = TxtBusqueda.Text.Trim();
+            string categoria = CmbCategoria.SelectedItem?.ToString() ?? "Todas";
+            string estado = ObtenerContenidoCombo(CmbEstado) ?? "Todos";
+            bool soloStockBajo = ChkSoloStockBajo.IsChecked == true;
+
+            _productosMostrados = _productoService.ObtenerProductos(
+                busqueda,
+                categoria,
+                estado,
+                soloStockBajo);
+
+            DgProductos.ItemsSource = _productosMostrados;
+
+            if (productoIdSeleccionar.HasValue)
+            {
+                Producto? producto = _productosMostrados.FirstOrDefault(
+                    item => item.ProductoId == productoIdSeleccionar.Value);
+
+                if (producto != null)
+                {
+                    DgProductos.SelectedItem = producto;
+                    DgProductos.ScrollIntoView(producto);
+                }
+            }
+
+            ActualizarResultadoListado();
+            ActualizarResumen();
+            ActualizarBotonesSeleccion();
         }
-
-        _productos.Add(new Producto
+        catch (Exception ex)
         {
-            ProductoId = 1,
-            CodigoProducto = "PRD-000123",
-            Nombre = "Tubería PVC 1/2 pulgada",
-            Categoria = "Materiales hidráulicos",
-            Descripcion = "Tubería para conexiones domiciliarias.",
-            Cantidad = 12m,
-            CantidadMinima = 20m,
-            Unidad = "Metros (m)",
-            FechaIngreso = DateOnly.FromDateTime(DateTime.Today.AddDays(-35)),
-            Estado = "Activo"
-        });
+            DgProductos.ItemsSource = null;
+            _productosMostrados.Clear();
+            ActualizarResultadoListado();
+            LimpiarResumen();
+            ActualizarBotonesSeleccion();
 
-        _productos.Add(new Producto
-        {
-            ProductoId = 2,
-            CodigoProducto = "PRD-000124",
-            Nombre = "Medidor de agua 1/2 pulgada",
-            Categoria = "Medición y control",
-            Descripcion = "Medidor residencial.",
-            Cantidad = 48m,
-            CantidadMinima = 15m,
-            Unidad = "Unidades",
-            FechaIngreso = DateOnly.FromDateTime(DateTime.Today.AddDays(-28)),
-            Estado = "Activo"
-        });
-
-        _productos.Add(new Producto
-        {
-            ProductoId = 3,
-            CodigoProducto = "PRD-000125",
-            Nombre = "Válvula de compuerta",
-            Categoria = "Válvulas y control",
-            Descripcion = "Válvula para aislamiento de línea.",
-            Cantidad = 7m,
-            CantidadMinima = 10m,
-            Unidad = "Unidades",
-            FechaIngreso = DateOnly.FromDateTime(DateTime.Today.AddDays(-21)),
-            Estado = "Activo"
-        });
-
-        _productos.Add(new Producto
-        {
-            ProductoId = 4,
-            CodigoProducto = "PRD-000126",
-            Nombre = "Cinta teflón",
-            Categoria = "Consumibles",
-            Descripcion = "Sellado de conexiones roscadas.",
-            Cantidad = 85m,
-            CantidadMinima = 25m,
-            Unidad = "Unidades",
-            FechaIngreso = DateOnly.FromDateTime(DateTime.Today.AddDays(-14)),
-            Estado = "Activo"
-        });
-
-        _productos.Add(new Producto
-        {
-            ProductoId = 5,
-            CodigoProducto = "PRD-000127",
-            Nombre = "Llave ajustable",
-            Categoria = "Herramientas",
-            Descripcion = "Herramienta de mantenimiento.",
-            Cantidad = 4m,
-            CantidadMinima = 5m,
-            Unidad = "Unidades",
-            FechaIngreso = DateOnly.FromDateTime(DateTime.Today.AddDays(-10)),
-            Estado = "Inactivo"
-        });
-    }
-
-    private void ConfigurarVistaFiltrada()
-    {
-        _vistaProductos = CollectionViewSource.GetDefaultView(_productos);
-        _vistaProductos.Filter = FiltrarProducto;
-        DgProductos.ItemsSource = _vistaProductos;
-        ActualizarResultadoListado();
-    }
-
-    private bool FiltrarProducto(object elemento)
-    {
-        if (elemento is not Producto producto)
-        {
-            return false;
+            MessageBox.Show(
+                "No fue posible cargar el inventario desde la base de datos.\n\n" +
+                ex.GetBaseException().Message,
+                "Error al cargar productos",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
         }
-
-        string texto = TxtBusqueda.Text.Trim();
-        string categoria = CmbCategoria.SelectedItem?.ToString() ?? "Todas";
-        string estado = ObtenerContenidoCombo(CmbEstado) ?? "Todos";
-        bool soloStockBajo = ChkSoloStockBajo.IsChecked == true;
-
-        bool coincideTexto = string.IsNullOrWhiteSpace(texto) ||
-            producto.CodigoProducto.Contains(texto, StringComparison.OrdinalIgnoreCase) ||
-            producto.Nombre.Contains(texto, StringComparison.OrdinalIgnoreCase);
-
-        bool coincideCategoria = categoria == "Todas" ||
-            producto.Categoria == categoria;
-
-        bool coincideEstado = estado == "Todos" ||
-            producto.Estado == estado;
-
-        bool coincideStock = !soloStockBajo || producto.StockBajo;
-
-        return coincideTexto &&
-               coincideCategoria &&
-               coincideEstado &&
-               coincideStock;
     }
 
     private static string? ObtenerContenidoCombo(ComboBox comboBox)
@@ -187,35 +122,42 @@ public partial class ProductosWindow : Window
 
     private void AplicarFiltros()
     {
-        _vistaProductos?.Refresh();
         DgProductos.SelectedItem = null;
-        ActualizarResultadoListado();
-        ActualizarBotonesSeleccion();
+        CargarProductos();
     }
 
     private void ActualizarResultadoListado()
     {
-        int cantidadVisible = 0;
-
-        if (_vistaProductos != null)
-        {
-            foreach (object _ in _vistaProductos)
-            {
-                cantidadVisible++;
-            }
-        }
+        int cantidadVisible = _productosMostrados.Count;
 
         TxtResultadoListado.Text = cantidadVisible == 1
             ? "Mostrando 1 producto"
             : $"Mostrando {cantidadVisible} productos";
     }
 
+    /// <summary>
+    /// Las tarjetas muestran el estado general del inventario, no solamente
+    /// las filas filtradas que aparecen en la tabla.
+    /// </summary>
     private void ActualizarResumen()
     {
-        TxtTotalProductos.Text = _productos.Count.ToString();
-        TxtProductosActivos.Text = _productos.Count(p => p.Estado == "Activo").ToString();
-        TxtStockBajo.Text = _productos.Count(p => p.Estado == "Activo" && p.StockBajo).ToString();
-        TxtProductosInactivos.Text = _productos.Count(p => p.Estado == "Inactivo").ToString();
+        List<Producto> todos = _productoService.ObtenerProductos();
+
+        TxtTotalProductos.Text = todos.Count.ToString();
+        TxtProductosActivos.Text = todos.Count(producto =>
+            producto.Estado == "Activo").ToString();
+        TxtStockBajo.Text = todos.Count(producto =>
+            producto.Estado == "Activo" && producto.StockBajo).ToString();
+        TxtProductosInactivos.Text = todos.Count(producto =>
+            producto.Estado == "Inactivo").ToString();
+    }
+
+    private void LimpiarResumen()
+    {
+        TxtTotalProductos.Text = "0";
+        TxtProductosActivos.Text = "0";
+        TxtStockBajo.Text = "0";
+        TxtProductosInactivos.Text = "0";
     }
 
     private void ActualizarBotonesSeleccion()
@@ -229,12 +171,14 @@ public partial class ProductosWindow : Window
         if (!haySeleccion || producto!.Estado == "Activo")
         {
             BtnCambiarEstado.Content = "Inactivar";
-            BtnCambiarEstado.Style = (Style)FindResource("DangerButtonStyle");
+            BtnCambiarEstado.Style =
+                (Style)FindResource("DangerButtonStyle");
         }
         else
         {
             BtnCambiarEstado.Content = "Reactivar";
-            BtnCambiarEstado.Style = (Style)FindResource("PrimaryButtonStyle");
+            BtnCambiarEstado.Style =
+                (Style)FindResource("PrimaryButtonStyle");
         }
     }
 
@@ -262,8 +206,8 @@ public partial class ProductosWindow : Window
 
     private void BtnActualizar_Click(object sender, RoutedEventArgs e)
     {
-        AplicarFiltros();
-        ActualizarResumen();
+        int? productoId = ProductoSeleccionado?.ProductoId;
+        CargarProductos(productoId);
     }
 
     private void BtnNuevo_Click(object sender, RoutedEventArgs e)
@@ -273,16 +217,26 @@ public partial class ProductosWindow : Window
             Owner = this
         };
 
-        if (ventana.ShowDialog() == true && ventana.ProductoResultado != null)
+        if (ventana.ShowDialog() != true ||
+            ventana.ProductoResultado == null)
         {
-            Producto nuevo = ventana.ProductoResultado;
-            nuevo.ProductoId = _productos.Count == 0
-                ? 1
-                : _productos.Max(p => p.ProductoId) + 1;
+            return;
+        }
 
-            _productos.Add(nuevo);
-            AplicarFiltros();
-            ActualizarResumen();
+        Producto nuevoProducto = ventana.ProductoResultado;
+
+        (bool exito, string mensaje) =
+            _productoService.CrearProducto(nuevoProducto);
+
+        MessageBox.Show(
+            mensaje,
+            exito ? "Producto registrado" : "No se pudo registrar",
+            MessageBoxButton.OK,
+            exito ? MessageBoxImage.Information : MessageBoxImage.Warning);
+
+        if (exito)
+        {
+            CargarProductos(nuevoProducto.ProductoId);
         }
     }
 
@@ -291,7 +245,9 @@ public partial class ProductosWindow : Window
         AbrirEdicion();
     }
 
-    private void DgProductos_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    private void DgProductos_MouseDoubleClick(
+        object sender,
+        MouseButtonEventArgs e)
     {
         if (ProductoSeleccionado != null)
         {
@@ -313,42 +269,46 @@ public partial class ProductosWindow : Window
             return;
         }
 
-        var copia = new Producto
-        {
-            ProductoId = seleccionado.ProductoId,
-            CodigoProducto = seleccionado.CodigoProducto,
-            Nombre = seleccionado.Nombre,
-            Categoria = seleccionado.Categoria,
-            Descripcion = seleccionado.Descripcion,
-            Cantidad = seleccionado.Cantidad,
-            CantidadMinima = seleccionado.CantidadMinima,
-            Unidad = seleccionado.Unidad,
-            FechaIngreso = seleccionado.FechaIngreso,
-            Estado = seleccionado.Estado
-        };
+        Producto? productoActual =
+            _productoService.ObtenerProductoPorId(seleccionado.ProductoId);
 
-        var ventana = new ProductoFormWindow(copia)
+        if (productoActual == null)
+        {
+            MessageBox.Show(
+                "El producto seleccionado ya no existe en la base de datos.",
+                "Producto no encontrado",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+
+            CargarProductos();
+            return;
+        }
+
+        var ventana = new ProductoFormWindow(productoActual)
         {
             Owner = this
         };
 
-        if (ventana.ShowDialog() == true && ventana.ProductoResultado != null)
+        if (ventana.ShowDialog() != true ||
+            ventana.ProductoResultado == null)
         {
-            Producto editado = ventana.ProductoResultado;
+            return;
+        }
 
-            seleccionado.CodigoProducto = editado.CodigoProducto;
-            seleccionado.Nombre = editado.Nombre;
-            seleccionado.Categoria = editado.Categoria;
-            seleccionado.Descripcion = editado.Descripcion;
-            seleccionado.Cantidad = editado.Cantidad;
-            seleccionado.CantidadMinima = editado.CantidadMinima;
-            seleccionado.Unidad = editado.Unidad;
-            seleccionado.FechaIngreso = editado.FechaIngreso;
-            seleccionado.Estado = editado.Estado;
+        Producto productoEditado = ventana.ProductoResultado;
 
-            _vistaProductos?.Refresh();
-            ActualizarResumen();
-            ActualizarBotonesSeleccion();
+        (bool exito, string mensaje) =
+            _productoService.ActualizarProducto(productoEditado);
+
+        MessageBox.Show(
+            mensaje,
+            exito ? "Producto actualizado" : "No se pudo actualizar",
+            MessageBoxButton.OK,
+            exito ? MessageBoxImage.Information : MessageBoxImage.Warning);
+
+        if (exito)
+        {
+            CargarProductos(productoEditado.ProductoId);
         }
     }
 
@@ -365,8 +325,12 @@ public partial class ProductosWindow : Window
             ? "Inactivo"
             : "Activo";
 
+        string accion = nuevoEstado == "Activo"
+            ? "reactivar"
+            : "inactivar";
+
         MessageBoxResult confirmacion = MessageBox.Show(
-            $"¿Desea cambiar el producto a estado {nuevoEstado}?",
+            $"¿Desea {accion} el producto {producto.CodigoProducto} - {producto.Nombre}?",
             "Confirmar cambio de estado",
             MessageBoxButton.YesNo,
             MessageBoxImage.Question);
@@ -376,24 +340,34 @@ public partial class ProductosWindow : Window
             return;
         }
 
-        producto.Estado = nuevoEstado;
-        _vistaProductos?.Refresh();
-        ActualizarResumen();
-        ActualizarBotonesSeleccion();
+        (bool exito, string mensaje) =
+            _productoService.CambiarEstadoProducto(
+                producto.ProductoId,
+                nuevoEstado);
+
+        MessageBox.Show(
+            mensaje,
+            exito ? "Estado actualizado" : "No se pudo cambiar el estado",
+            MessageBoxButton.OK,
+            exito ? MessageBoxImage.Information : MessageBoxImage.Warning);
+
+        if (exito)
+        {
+            CargarProductos(producto.ProductoId);
+        }
     }
 
-    private void DgProductos_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void DgProductos_SelectionChanged(
+        object sender,
+        SelectionChangedEventArgs e)
     {
         ActualizarBotonesSeleccion();
     }
 
+    // Estos métodos se conservan para una posible barra lateral futura.
     private void BtnInicio_Click(object sender, RoutedEventArgs e)
     {
-        MessageBox.Show(
-            "El acceso al panel administrativo general se integrará con el trabajo del equipo.",
-            "Integración pendiente",
-            MessageBoxButton.OK,
-            MessageBoxImage.Information);
+        Close();
     }
 
     private void BtnCerrarSesion_Click(object sender, RoutedEventArgs e)
@@ -412,10 +386,5 @@ public partial class ProductosWindow : Window
         var login = new LoginWindow();
         login.Show();
         Close();
-    }
-
-    private void Button_Click(object sender, RoutedEventArgs e)
-    {
-
     }
 }

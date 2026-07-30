@@ -6,7 +6,7 @@
         Height="820"
         MinWidth="1100"
         MinHeight="680"
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="CenterOwner"
         Background="{StaticResource PageBackgroundBrush}"
         TextOptions.TextFormattingMode="Display"
         Loaded="Window_Loaded">
