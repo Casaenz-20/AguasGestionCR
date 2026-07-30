@@ -6,7 +6,7 @@ namespace AguasGestionCR.Local_cofig
 {
     public static class Local_config
     {
-        public static string CadenaConexion => "Server=(localdb)\\MSSQLLocalDB;Database=AcueductoDB;Integrated Security=True;TrustServerCertificate=True;";
+        public static string CadenaConexion => "Server=(localhost)\\MSSQLLocalDB;Database=AcueductoDB;Integrated Security=True;TrustServerCertificate=True;";
             
             
             

@@ -157,8 +157,8 @@
                                            Style="{StaticResource FieldLabelStyle}"/>
                                 <ComboBox x:Name="CmbCategoria"
                                           Style="{StaticResource ModernComboBoxStyle}"
-                                          IsEditable="True"
-                                          IsTextSearchEnabled="True"
+                                          IsEditable="False"
+                                IsTextSearchEnabled="True"
                                           MaxDropDownHeight="220"/>
                             </StackPanel>
 
@@ -167,7 +167,7 @@
                                            Style="{StaticResource FieldLabelStyle}"/>
                                 <ComboBox x:Name="CmbUnidad"
                                           Style="{StaticResource ModernComboBoxStyle}"
-                                          IsEditable="True"
+                                          IsEditable="False"
                                           IsTextSearchEnabled="True"
                                           MaxDropDownHeight="220"/>
                             </StackPanel>

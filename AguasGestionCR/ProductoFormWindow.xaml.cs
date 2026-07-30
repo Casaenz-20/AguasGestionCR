@@ -46,10 +46,10 @@ public partial class ProductoFormWindow : Window
         CmbCategoria.ItemsSource = new List<string>
         {
             "Materiales hidráulicos",
-            "Medición y control",
-            "Válvulas y control",
+            "Medición y Control",
+            "Válvulas y Control",
             "Consumibles",
-            "Químicos y tratamiento",
+            "Químicos y Tratamiento",
             "Herramientas",
             "Otros"
         };
@@ -61,7 +61,8 @@ public partial class ProductoFormWindow : Window
             "Kilogramos (kg)",
             "Litros (L)",
             "Cajas",
-            "Paquetes"
+            "Paquetes",
+            "Cuñetes (Kg)"
         };
     }
 
@@ -95,8 +96,13 @@ public partial class ProductoFormWindow : Window
 
         TxtCodigo.Text = producto.CodigoProducto;
         TxtNombre.Text = producto.Nombre;
-        CmbCategoria.Text = producto.Categoria;
-        CmbUnidad.Text = producto.Unidad;
+        SeleccionarValorLista(
+                              CmbCategoria,
+                              producto.Categoria);
+
+        SeleccionarValorLista(
+                              CmbUnidad,
+                               producto.Unidad);
         TxtCantidad.Text = producto.Cantidad.ToString("N2");
         TxtCantidadMinima.Text = producto.CantidadMinima.ToString("N2");
         DtpFechaIngreso.SelectedDate =
@@ -338,5 +344,25 @@ public partial class ProductoFormWindow : Window
     {
         TxtError.Text = string.Empty;
         BordeError.Visibility = Visibility.Collapsed;
+    }
+
+
+    private static void SeleccionarValorLista(
+    ComboBox comboBox,
+    string valor)
+    {
+        foreach (object item in comboBox.Items)
+        {
+            if (string.Equals(
+                    item?.ToString(),
+                    valor,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                comboBox.SelectedItem = item;
+                return;
+            }
+        }
+
+        comboBox.SelectedIndex = -1;
     }
 }
