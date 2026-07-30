@@ -47,7 +47,28 @@ namespace AguasGestionCR
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            
+            try
+            {
+                EviarReporte enviarReporte = new EviarReporte();
+
+                string correoUsuario = UsuarioSesion.correo;
+                string descripcion = txtDescripcion.Text;
+                string medidor = txtMedidor.Text;
+                string tipoAveria = ((ComboBoxItem)cmbTipoAveria.SelectedItem).Content.ToString();
+                string sector = txtSector.Text;
+                string direccion = txtDireccion.Text;
+
+
+                enviarReporte.EnviarReporteAveria(correoUsuario, descripcion, medidor, tipoAveria, sector, direccion);
+
+
+                MessageBox.Show("Reporte enviado correctamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            }
+            catch
+            {
+                MessageBox.Show("Error al enviar el reporte. Por favor, inténtelo de nuevo más tarde.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ using System.Windows.Controls;
 
 namespace AguasGestionCR.Services
 {
-    public  class EviarReporte
+    public class EviarReporte
     {
         private readonly string _correoEmpresa = "aguagestioncr@gmail.com";
         private readonly string _contrasenaApp = "gzzracochvyksoqe";
@@ -50,5 +50,5 @@ namespace AguasGestionCR.Services
         }
 
     }
-    }
+}
 
