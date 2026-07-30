@@ -157,7 +157,7 @@
                         <!-- Botón Enviar Reporte -->
                         <Button Grid.Column="2" Content="Enviar Reporte" Width="140" Height="40" 
                                 Background="#C0392B" Foreground="White" FontWeight="Bold" 
-                                BorderThickness="0" Cursor="Hand" Click="BtnEnviar_Click"/>
+                                BorderThickness="0" Cursor="Hand" Click="Button_Click" />
                     </Grid>
 
                 </Grid>
