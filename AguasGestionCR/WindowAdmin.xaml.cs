@@ -79,5 +79,11 @@ namespace AguasGestionCR
             BtnInicio.Style = (Style)FindResource("ActiveSidebarButton");
             BtnClientes.Style = (Style)FindResource("SidebarButton");
         }
+
+        private void BtnReportarAveria_Click(object sender, RoutedEventArgs e)
+        {
+            ReportView reportView = new ReportView();
+            reportView.Show();
+        }
     }
 }

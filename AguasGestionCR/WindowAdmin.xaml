@@ -73,7 +73,7 @@
                 <!-- Opciones del Menú -->
                 <StackPanel Grid.Row="1" Margin="0,10,0,0">
                     <Button x:Name="BtnInicio" Content="🏠   Inicio" Style="{StaticResource ActiveSidebarButton}" Click="BtnInicio_Click"/>
-                    <Button Content="⚠️   Reportar avería" Style="{StaticResource SidebarButton}"/>
+                    <Button x:Name="BtnReportarAveria" Content="⚠️   Reportar avería" Style="{StaticResource SidebarButton}" Click="BtnReportarAveria_Click"/>
                     <Button Content="📦   Inventario público" Style="{StaticResource SidebarButton}"/>
                     <Button x:Name="BtnClientes" Content="👥   Clientes" Style="{StaticResource SidebarButton}" Click="BtnCliente_Click"/>
                 </StackPanel>

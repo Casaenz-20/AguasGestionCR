@@ -48,9 +48,9 @@ namespace AguasGestionCR
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtDescripcion.Text) ||
-        string.IsNullOrWhiteSpace(txtMedidor.Text) ||
-        cmbTipoAveria.SelectedItem == null)
-            {
+                 string.IsNullOrWhiteSpace(txtMedidor.Text) ||
+                 cmbTipoAveria.SelectedItem == null)
+             {
                 MessageBox.Show("Por favor, complete todos los campos obligatorios.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -96,7 +96,7 @@ namespace AguasGestionCR
 
                     EviarReporte reporte = new EviarReporte();
 
-                    // En EviarReporte.EnviarReporteAveria(...) el correo SÍ va de primero
+   
                     reporte.EnviarReporteAveria(correo, descripcion, medidor, tipoAveria, sector, direccion);
 
                     MessageBox.Show("Reporte de avería enviado correctamente por el administrador.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
