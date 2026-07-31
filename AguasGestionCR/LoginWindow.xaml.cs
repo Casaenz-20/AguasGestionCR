@@ -17,18 +17,13 @@ namespace AcueductoApp.Views
             _usuarioService = new UsuarioService(passwordHasher);
         }
 
-        private void btnIngresar_Click(
-     object sender,
-     RoutedEventArgs e)
+        private void btnIngresar_Click(object sender, RoutedEventArgs e)
         {
-            string usuario =
-                txtUsuario.Text.Trim();
+            string usuario =txtUsuario.Text.Trim();
 
-            string contrasena =
-                txtContrasena.Password;
+            string contrasena = txtContrasena.Password;
 
-            if (string.IsNullOrWhiteSpace(usuario) ||
-                string.IsNullOrWhiteSpace(contrasena))
+            if (string.IsNullOrWhiteSpace(usuario) || string.IsNullOrWhiteSpace(contrasena))
             {
                 MessageBox.Show(
                     "Por favor complete todos los campos.",
@@ -44,9 +39,7 @@ namespace AcueductoApp.Views
             try
             {
                 usuarioValido =
-                    _usuarioService.Autenticar(
-                        usuario,
-                        contrasena);
+                    _usuarioService.Autenticar(usuario,contrasena);
             }
             catch (Exception ex)
             {
@@ -107,8 +100,7 @@ namespace AcueductoApp.Views
                 return;
             }
 
-            MessageBox.Show(
-                esAdministrador
+            MessageBox.Show(esAdministrador
                     ? $"¡Bienvenido Administrador " +
                       $"{usuarioValido.NombreCompleto}!"
                     : $"¡Bienvenido " +
