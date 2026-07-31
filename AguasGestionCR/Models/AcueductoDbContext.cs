@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using AguasGestionCR.Local_cofig;
+using AguasGestionCR.Models;
 using Microsoft.EntityFrameworkCore;
-using AguasGestionCR.Local_cofig;
+using System;
+using System.Collections.Generic;
 
 namespace AguasGestionCR.Models;
 
@@ -24,7 +25,7 @@ public partial class AcueductoDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer(Local_config.CadenaConexion);
+       => optionsBuilder.UseSqlServer(Local_config.CadenaConexion);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

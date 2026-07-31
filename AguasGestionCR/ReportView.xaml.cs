@@ -38,7 +38,7 @@ namespace AguasGestionCR
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
-            if (UsuarioSesion.Rol == "Usuario")
+            if (UsuarioSesion.Rol == "Cliente")
             {
                 txtCorreo.Text = "aguagestioncr@gmail.com";
                 txtCorreo.IsReadOnly = true;
@@ -52,7 +52,7 @@ namespace AguasGestionCR
                 MessageBox.Show("Por favor, complete todos los campos obligatorios.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            else if (UsuarioSesion.Rol == "Usuario")
+            else if (UsuarioSesion.Rol == "Cliente")
             {
                 try
                 {
@@ -78,9 +78,9 @@ namespace AguasGestionCR
                     MessageBox.Show("Reporte enviado correctamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 }
-                catch
+                catch(Exception ex)
                 {
-                    MessageBox.Show("Error al enviar el reporte. Por favor, inténtelo de nuevo más tarde.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Error al enviar el reporte. Por favor, inténtelo de nuevo más tarde." + ex, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else if(UsuarioSesion.Rol == "Administrador")
