@@ -22,6 +22,14 @@ namespace AguasGestionCR.Services
             if (cliente == null) throw new ArgumentNullException(nameof(cliente));
             if (string.IsNullOrWhiteSpace(cliente.Identificacion)) throw new ArgumentException("La identificación es obligatoria.");
 
+            // 1. ASIGNAR MEDIDOR AUTOMÁTICAMENTE SI VIENE VACÍO
+            if (string.IsNullOrWhiteSpace(cliente.NumeroMedidor))
+            {
+                // Genera un número de medidor automático único, ej: MED-2026-8492
+                string randomNum = new Random().Next(1000, 9999).ToString();
+                cliente.NumeroMedidor = $"MED-{DateTime.Now.Year}-{randomNum}";
+            }
+
             if (cliente.FechaRegistro == default) cliente.FechaRegistro = DateTime.Now;
             cliente.UltimaActualizacion = DateTime.Now;
 
@@ -34,7 +42,8 @@ namespace AguasGestionCR.Services
                 cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@NombreCompleto", cliente.NombreCompleto));
                 cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@Identificacion", cliente.Identificacion));
                 cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@EstadoPrevista", cliente.EstadoPrevista));
-                cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@NumeroMedidor", (object?)cliente.NumeroMedidor ?? DBNull.Value));
+                // Enviamos el medidor generado automáticamente
+                cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@NumeroMedidor", cliente.NumeroMedidor));
                 cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@Direccion", (object?)cliente.Direccion ?? DBNull.Value));
                 cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@Telefono", (object?)cliente.Telefono ?? DBNull.Value));
                 cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@CorreoElectronico", (object?)cliente.CorreoElectronico ?? DBNull.Value));
@@ -89,21 +98,24 @@ namespace AguasGestionCR.Services
             int filasAfectadas = _context.SaveChanges();
             return filasAfectadas > 0;
         }
-        public List<Cliente> ObtenerClientesActivos()
-        {
-            return _context.Clientes
-                           .Where(c => c.Estado == "Activo") // <-Filtramos solo los clientes activos
-                           .ToList();
-        }
-        public Cliente EliminarCliente(int id)
+
+        public string EliminarCliente(int id)
         {
             var cliente = _context.Clientes
-                          .FirstOrDefault(c => c.ClienteId == id && c.Estado == "Activo");
+                                  .FirstOrDefault(c => c.ClienteId == id && c.Estado == "Activo");
 
             if (cliente == null)
-                throw new Exception("Cliente no encontrado o inactivo");
+                throw new Exception("Cliente no encontrado o ya se encuentra inactivo.");
 
-            return cliente;
+            // Cambiamos el estado del cliente a "Inactivo"
+            cliente.Estado = "Inactivo";
+            cliente.UltimaActualizacion = DateTime.Now;
+
+            // 3. Indicamos a Entity Framework que actualice el registro y guardamos
+            _context.Clientes.Update(cliente);
+            _context.SaveChanges();
+
+            return "Cliente inactivo";
         }
     }
 }

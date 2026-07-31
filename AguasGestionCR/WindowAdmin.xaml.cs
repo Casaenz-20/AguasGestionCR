@@ -23,5 +23,20 @@ namespace AguasGestionCR
 
             txtFechaActual.Text = DateTime.Now.ToString("dd/MM/yyyy");
         }
+
+       
+
+        private void BtnAgregarCliente_Click(object sender, RoutedEventArgs e)
+        {
+            Clientes ventanaModal = new Clientes();
+            ventanaModal.Owner = this;
+            ventanaModal.ShowDialog();
+        }
+
+        private void BtnCliente_Click(object sender, RoutedEventArgs e)
+        {
+            ViewClientes.Visibility = Visibility.Visible;
+            ViewInicio.Visibility = Visibility.Collapsed;
+        }
     }
 }

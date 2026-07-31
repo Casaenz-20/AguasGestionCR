@@ -10,6 +10,6 @@ namespace AguasGestionCR.Interfaces
         public int RegistrarCliente(Cliente cliente);
         public Cliente ObtenerClientePorId(int id);
         public bool EditarCliente(Cliente cliente);
-        public Cliente EliminarCliente(int id);
+        public string EliminarCliente(int id);
     }
 }
