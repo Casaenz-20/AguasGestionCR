@@ -74,8 +74,8 @@
                 <StackPanel Grid.Row="1" Margin="0,10,0,0">
                     <Button Content="🏠   Inicio" Style="{StaticResource ActiveSidebarButton}"/>
                     <Button Content="⚠️   Reportar avería" Style="{StaticResource SidebarButton}"/>
-                    <Button x:Name="BtnInventario" Content="📦   Inventario" Style="{StaticResource SidebarButton}" Click="BtnInventario_Click"/>
-                    <Button Content="👥   Clientes" Style="{StaticResource SidebarButton}"/>
+                    <Button Content="📦   Inventario público" Style="{StaticResource SidebarButton}"/>
+                    <Button Content="👥   Clientes" Style="{StaticResource SidebarButton}" Click="BtnCliente_Click"/>
                 </StackPanel>
 
                 <!-- Cerrar Sesión -->
@@ -108,7 +108,7 @@
             </Border>
 
             <!-- Panel de Contenido -->
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer x:Name="ViewInicio" Grid.Row="1" VerticalScrollBarVisibility="Auto">
                 <Grid Margin="15">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -218,6 +218,8 @@
                                     </StackPanel>
                                 </Border>
 
+                                
+
                                 <!-- Mensaje final -->
                                 <Border Background="#EBF5FB" Padding="10" CornerRadius="6" Margin="0,10,0,0">
                                     <TextBlock Text="Nuestro compromiso es brindar un servicio eficiente y de calidad para toda la comunidad." 
@@ -228,6 +230,102 @@
                     </Grid>
                 </Grid>
             </ScrollViewer>
+            <!-- ================= VISTA 2: GESTIÓN DE CLIENTES ================= -->
+            <Grid x:Name="ViewClientes" Grid.Row="1" Margin="15" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Título de la sección -->
+                <TextBlock Grid.Row="0" Text="Gestión de Clientes" FontSize="22" FontWeight="Bold" Foreground="#0A2540" Margin="10,0,0,15"/>
+
+                <!-- Barra de Botones de Acción -->
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0,10,15">
+                    <Button Content="➕  Agregar cliente" Background="#0F4C81" Foreground="White" FontWeight="Bold" Padding="15,8" Margin="0,0,10,0" BorderThickness="0" Cursor="Hand" Click="BtnAgregarCliente_Click"/>
+                    <Button Content="✏️  Editar" Background="#EBF5FB" Foreground="#1B4F72" FontWeight="SemiBold" Padding="15,8" Margin="0,0,10,0" BorderBrush="#AED6F1" BorderThickness="1" Cursor="Hand"/>
+                    <Button Content="🗑️  Eliminar" Background="#FDEDEC" Foreground="#C0392B" FontWeight="SemiBold" Padding="15,8" Margin="0,0,10,0" BorderBrush="#FADBD8" BorderThickness="1" Cursor="Hand"/>
+                    <Button Content="🔍  Limpiar filtros" Background="#F8F9F9" Foreground="#333333" Padding="15,8" BorderBrush="#D5D8DC" BorderThickness="1" Cursor="Hand"/>
+                </StackPanel>
+
+                <!-- Tarjeta Contenedora de Filtros y Tabla -->
+                <Border Grid.Row="2" Style="{StaticResource CardStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Filtros de Búsqueda -->
+                        <Grid Grid.Row="0" Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Buscar por nombre" FontSize="11" Foreground="#666" Margin="0,0,0,5"/>
+                                <TextBox Text="Escribe el nombre del cliente..." Foreground="#888" Padding="8" BorderBrush="#D5D8DC"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                <TextBlock Text="Identificación" FontSize="11" Foreground="#666" Margin="0,0,0,5"/>
+                                <TextBox Text="Ej. 12345678" Foreground="#888" Padding="8" BorderBrush="#D5D8DC"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                                <TextBlock Text="Número de medidor" FontSize="11" Foreground="#666" Margin="0,0,0,5"/>
+                                <TextBox Text="Ej. 00012345" Foreground="#888" Padding="8" BorderBrush="#D5D8DC"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="3">
+                                <TextBlock Text="Estado" FontSize="11" Foreground="#666" Margin="0,0,0,5"/>
+                                <ComboBox Padding="8" BorderBrush="#D5D8DC">
+                                    <ComboBoxItem Content="Todos" IsSelected="True"/>
+                                    <ComboBoxItem Content="Activo"/>
+                                    <ComboBoxItem Content="Inactivo"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Tabla de Datos (DataGrid) -->
+                        <DataGrid Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" 
+              GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F0F3F4"
+              Background="Transparent" BorderBrush="#E5E9F2" HeadersVisibility="Column">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                                <DataGridTextColumn Header="Nombre completo" Binding="{Binding Nombre}" Width="*"/>
+                                <DataGridTextColumn Header="Identificación" Binding="{Binding Identificacion}" Width="110"/>
+                                <DataGridTextColumn Header="N° medidor" Binding="{Binding Medidor}" Width="100"/>
+                                <DataGridTextColumn Header="Dirección" Binding="{Binding Direccion}" Width="*"/>
+                                <DataGridTextColumn Header="Teléfono" Binding="{Binding Telefono}" Width="110"/>
+                                <DataGridTemplateColumn Header="Estado" Width="90">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#E8F8F5" CornerRadius="4" Padding="6,2" HorizontalAlignment="Center">
+                                                <TextBlock Text="Activo" Foreground="#27AE60" FontSize="11" FontWeight="Bold"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+
+                <!-- Paginación inferior de la tabla -->
+                <Grid Grid.Row="3" Margin="10,5,10,0">
+                    <TextBlock Text="Mostrando 1 a 8 de 156 clientes" Foreground="#666" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="&lt;&lt;" Padding="8,4" Margin="0,0,5,0"/>
+                        <Button Content="1" Background="#0F4C81" Foreground="White" Padding="10,4" Margin="0,0,5,0"/>
+                        <Button Content="2" Padding="10,4" Margin="0,0,5,0"/>
+                        <Button Content="3" Padding="10,4" Margin="0,0,5,0"/>
+                        <Button Content="&gt;&gt;" Padding="8,4"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
 
             <!-- Pie de página (Footer) -->
             <Border Grid.Row="2" Background="#FFFFFF" BorderBrush="#E5E9F2" BorderThickness="0,1,0,0">
