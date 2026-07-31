@@ -24,19 +24,36 @@ namespace AguasGestionCR
             txtFechaActual.Text = DateTime.Now.ToString("dd/MM/yyyy");
         }
 
-       
-
-        private void BtnAgregarCliente_Click(object sender, RoutedEventArgs e)
+        private void BtnInventario_Click(object sender, RoutedEventArgs e)
         {
-            Clientes ventanaModal = new Clientes();
-            ventanaModal.Owner = this;
-            ventanaModal.ShowDialog();
+            var ventanaInventario =
+                   new ProductosWindow
+                   {
+                       Owner = this
+                   };
+
+            ventanaInventario.ShowDialog();
         }
 
-        private void BtnCliente_Click(object sender, RoutedEventArgs e)
+        private void BtnCerrarSesion_Click(object sender, RoutedEventArgs e)
         {
-            ViewClientes.Visibility = Visibility.Visible;
-            ViewInicio.Visibility = Visibility.Collapsed;
+            MessageBoxResult resultado =
+            MessageBox.Show(
+           "¿Desea cerrar la sesión actual?",
+           "Cerrar sesión",
+           MessageBoxButton.YesNo,
+           MessageBoxImage.Question);
+
+            if (resultado != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            var login =
+                new AcueductoApp.Views.LoginWindow();
+
+            login.Show();
+            Close();
         }
     }
 }

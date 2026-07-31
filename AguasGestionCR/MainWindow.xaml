@@ -77,7 +77,7 @@
                     <Button Content="🏠   Estado del Servicio" Style="{StaticResource ActiveSidebarButton}"/>
                     <Button x:Name="btnReportarAveria" Content="⚠️   Reportar Avería" Style="{StaticResource SidebarButton}" Click="btnReportarAveria_Click"/>
                     <Button Content="👤   Clientes" Style="{StaticResource SidebarButton}"/>
-                    <Button Content="▣   Inventario" Style="{StaticResource SidebarButton}"/>
+                    
                 </StackPanel>
 
                 <!-- Cerrar Sesión -->

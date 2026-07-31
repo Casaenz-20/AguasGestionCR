@@ -79,7 +79,7 @@
                 </StackPanel>
 
                 <!-- Cerrar Sesión -->
-                <Button Grid.Row="2" Content="🚪   Cerrar sesión" Style="{StaticResource SidebarButton}" Margin="0,0,0,20"/>
+                <Button Grid.Row="2" Content="🚪   Cerrar sesión" Style="{StaticResource SidebarButton}" Margin="0,10,0,10" Click="BtnCerrarSesion_Click"/>
 
                 <!-- Estado del sistema -->
                 <StatusBar Grid.Row="3" Background="#06182B" Foreground="#8FA3BF" FontSize="11">
