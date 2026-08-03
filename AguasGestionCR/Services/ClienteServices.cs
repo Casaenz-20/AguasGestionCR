@@ -115,5 +115,34 @@ namespace AguasGestionCR.Services
 
             return "Cliente inactivo";
         }
+        public IEnumerable<Cliente> ObtenerClientes(string nombre = null, string identificacion = null, string medidor = null, string estado = "Todos")
+        {
+            // la consulta base de la tabla Clientes
+            var query = _context.Clientes.AsQueryable();
+
+            // Aplica filtros 
+            if (!string.IsNullOrWhiteSpace(nombre))
+            {
+                query = query.Where(c => c.NombreCompleto.Contains(nombre));
+            }
+
+            if (!string.IsNullOrWhiteSpace(identificacion))
+            {
+                query = query.Where(c => c.Identificacion.Contains(identificacion));
+            }
+
+            if (!string.IsNullOrWhiteSpace(medidor))
+            {
+                query = query.Where(c => c.NumeroMedidor.Contains(medidor));
+            }
+
+            if (!string.IsNullOrEmpty(estado) && estado != "Todos")
+            {
+                query = query.Where(c => c.Estado == estado);
+            }
+
+
+            return query.ToList();
+        }
     }
 }

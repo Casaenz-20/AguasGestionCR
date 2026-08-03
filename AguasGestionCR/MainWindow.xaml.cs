@@ -29,7 +29,6 @@ namespace AguasGestionCR
         {
             ReportView reportView = new ReportView();
             reportView.Show();
-            MessageBox.Show(UsuarioSesion.Rol, UsuarioSesion.correo);
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -51,6 +50,19 @@ namespace AguasGestionCR
 
             login.Show();
             Close();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ReportView reportView = new ReportView();
+            reportView.Show();
+
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            ReportView reportView = new ReportView();
+            reportView.Show();
         }
     }
 }

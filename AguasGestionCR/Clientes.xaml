@@ -42,7 +42,11 @@
                             </StackPanel>
                             <StackPanel Grid.Column="2">
                                 <TextBlock Text="Número de medidor" Foreground="#6B7280" FontSize="12" Margin="0,0,0,3"/>
-                                <TextBox x:Name="txtNumeroMedidor" Height="35" Padding="8,5" BorderBrush="#D1D5DB" BorderThickness="1"/>
+                                <TextBox x:Name="txtNumeroMedidor" 
+                                         IsReadOnly="True" 
+                                         Background="#EAECEE" 
+                                         Foreground="#555" 
+                                         ToolTip="Este campo es generado automáticamente por el sistema" Height="35" Padding="8,5" BorderBrush="#D1D5DB" BorderThickness="1"/>
                             </StackPanel>
                         </Grid>
 
