@@ -31,11 +31,31 @@ public partial class ProductosWindow : Window
     private Producto? ProductoSeleccionado =>
         DgProductos.SelectedItem as Producto;
 
-    private void Window_Loaded(object sender, RoutedEventArgs e)
+    private void Window_Loaded(
+    object sender,
+    RoutedEventArgs e)
     {
-        TxtFechaActual.Text = DateTime.Now.ToString("dd/MM/yyyy");
+        TxtFechaActual.Text =
+            DateTime.Now.ToString("dd/MM/yyyy");
+
         CargarFiltrosVisuales();
-        CargarProductos();
+        PrepararListadoVacio();
+
+        try
+        {
+            ActualizarResumen();
+        }
+        catch (Exception ex)
+        {
+            LimpiarResumen();
+
+            MessageBox.Show(
+                "No fue posible cargar el resumen del inventario.\n\n" +
+                ex.GetBaseException().Message,
+                "Error de inventario",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
     }
 
     private void CargarFiltrosVisuales()
@@ -123,6 +143,13 @@ public partial class ProductosWindow : Window
     private void AplicarFiltros()
     {
         DgProductos.SelectedItem = null;
+
+        if (!HayCriteriosConsulta())
+        {
+            PrepararListadoVacio();
+            return;
+        }
+
         CargarProductos();
     }
 
@@ -195,106 +222,105 @@ public partial class ProductosWindow : Window
         }
     }
 
-    private void BtnLimpiarFiltros_Click(object sender, RoutedEventArgs e)
+    private void BtnLimpiarFiltros_Click(
+    object sender,
+    RoutedEventArgs e)
     {
         TxtBusqueda.Clear();
         CmbCategoria.SelectedIndex = 0;
         CmbEstado.SelectedIndex = 0;
         ChkSoloStockBajo.IsChecked = false;
-        AplicarFiltros();
+
+        PrepararListadoVacio();
+        TxtBusqueda.Focus();
     }
 
-    private void BtnActualizar_Click(object sender, RoutedEventArgs e)
+    private void BtnActualizar_Click(
+    object sender,
+    RoutedEventArgs e)
     {
-        int? productoId = ProductoSeleccionado?.ProductoId;
-        CargarProductos(productoId);
+        try
+        {
+            ActualizarResumen();
+
+            if (!HayCriteriosConsulta())
+            {
+                PrepararListadoVacio();
+                return;
+            }
+
+            int? productoId =
+                ProductoSeleccionado?.ProductoId;
+
+            CargarProductos(productoId);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                "No fue posible actualizar el inventario.\n\n" +
+                ex.GetBaseException().Message,
+                "Error al actualizar",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
     }
 
-    //private void BtnNuevo_Click(object sender, RoutedEventArgs e)
-    //{
-    //    var ventana = new ProductoFormWindow
-    //    {
-    //        Owner = this
-    //    };
 
-    //    if (ventana.ShowDialog() == true && ventana.ProductoResultado != null)
-    //    {
-    //        Producto nuevo = ventana.ProductoResultado;
-    //        nuevo.ProductoId = _productos.Count == 0
-    //            ? 1
-    //            : _productos.Max(p => p.ProductoId) + 1;
+    private bool HayCriteriosConsulta()
+    {
+        string busqueda =
+            TxtBusqueda.Text.Trim();
 
-    //        _productos.Add(nuevo);
-    //        AplicarFiltros();
-    //        ActualizarResumen();
-    //    }
-    //}
+        string categoria =
+            CmbCategoria.SelectedItem?.ToString()
+            ?? "Todas";
 
-    //private void BtnEditar_Click(object sender, RoutedEventArgs e)
-    //{
-    //    AbrirEdicion();
-    //}
+        string estado =
+            ObtenerContenidoCombo(CmbEstado)
+            ?? "Todos";
 
-    //private void DgProductos_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-    //{
-    //    if (ProductoSeleccionado != null)
-    //    {
-    //        AbrirEdicion();
-    //    }
-    //}
+        bool tieneBusqueda =
+            !string.IsNullOrWhiteSpace(busqueda);
 
-    //private void AbrirEdicion()
-    //{
-    //    Producto? seleccionado = ProductoSeleccionado;
+        bool tieneCategoria =
+            !categoria.Equals(
+                "Todas",
+                StringComparison.OrdinalIgnoreCase);
 
-    //    if (seleccionado == null)
-    //    {
-    //        MessageBox.Show(
-    //            "Seleccione un producto para editarlo.",
-    //            "Producto requerido",
-    //            MessageBoxButton.OK,
-    //            MessageBoxImage.Information);
-    //        return;
-    //    }
+        bool tieneEstado =
+            !estado.Equals(
+                "Todos",
+                StringComparison.OrdinalIgnoreCase);
 
-    //    var copia = new Producto
-    //    {
-    //        ProductoId = seleccionado.ProductoId,
-    //        CodigoProducto = seleccionado.CodigoProducto,
-    //        Nombre = seleccionado.Nombre,
-    //        Categoria = seleccionado.Categoria,
-    //        Descripcion = seleccionado.Descripcion,
-    //        Cantidad = seleccionado.Cantidad,
-    //        CantidadMinima = seleccionado.CantidadMinima,
-    //        Unidad = seleccionado.Unidad,
-    //        FechaIngreso = seleccionado.FechaIngreso,
-    //        Estado = seleccionado.Estado
-    //    };
+        bool soloStockBajo =
+            ChkSoloStockBajo.IsChecked == true;
 
-    //    var ventana = new ProductoFormWindow(copia)
-    //    {
-    //        Owner = this
-    //    };
+        return tieneBusqueda ||
+               tieneCategoria ||
+               tieneEstado ||
+               soloStockBajo;
+    }
 
-    //    if (ventana.ShowDialog() == true && ventana.ProductoResultado != null)
-    //    {
-    //        Producto editado = ventana.ProductoResultado;
+    private void PrepararListadoVacio()
+    {
+        _productosMostrados =
+            new List<Producto>();
 
-    //        seleccionado.CodigoProducto = editado.CodigoProducto;
-    //        seleccionado.Nombre = editado.Nombre;
-    //        seleccionado.Categoria = editado.Categoria;
-    //        seleccionado.Descripcion = editado.Descripcion;
-    //        seleccionado.Cantidad = editado.Cantidad;
-    //        seleccionado.CantidadMinima = editado.CantidadMinima;
-    //        seleccionado.Unidad = editado.Unidad;
-    //        seleccionado.FechaIngreso = editado.FechaIngreso;
-    //        seleccionado.Estado = editado.Estado;
+        DgProductos.ItemsSource = null;
+        DgProductos.SelectedItem = null;
 
-    //        _vistaProductos?.Refresh();
-    //        ActualizarResumen();
-    //        ActualizarBotonesSeleccion();
-    //    }
-    //}
+        TxtResultadoListado.Text =
+            "Ingrese un código, nombre o seleccione " +
+            "un filtro para consultar productos.";
+
+        ActualizarBotonesSeleccion();
+    }
+
+
+
+
+
+    
 
     private void BtnCambiarEstado_Click(object sender, RoutedEventArgs e)
     {
@@ -377,18 +403,165 @@ public partial class ProductosWindow : Window
 
     }
 
-    private void BtnNuevo_Click(object sender, RoutedEventArgs e)
+    private void BtnNuevo_Click(
+    object sender,
+    RoutedEventArgs e)
     {
+        bool registrarOtro;
 
+        do
+        {
+            var formulario =
+                new ProductoFormWindow
+                {
+                    Owner = this
+                };
+
+            bool? resultadoFormulario =
+                formulario.ShowDialog();
+
+            if (resultadoFormulario != true ||
+                formulario.ProductoResultado == null)
+            {
+                return;
+            }
+
+            Producto nuevoProducto =
+                formulario.ProductoResultado;
+
+            (bool exito, string mensaje) =
+                _productoService.CrearProducto(
+                    nuevoProducto);
+
+            if (!exito)
+            {
+                MessageBox.Show(
+                    mensaje,
+                    "No se pudo registrar",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+
+                return;
+            }
+
+            if (HayCriteriosConsulta())
+            {
+                CargarProductos(
+                    nuevoProducto.ProductoId);
+            }
+            else
+            {
+                PrepararListadoVacio();
+                ActualizarResumen();
+            }
+
+            MessageBoxResult respuesta =
+                MessageBox.Show(
+                    mensaje +
+                    "\n\n¿Desea registrar otro producto?",
+                    "Producto registrado",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Information);
+
+            registrarOtro =
+                respuesta == MessageBoxResult.Yes;
+        }
+        while (registrarOtro);
     }
 
-    private void BtnEditar_Click(object sender, RoutedEventArgs e)
+    private void BtnEditar_Click(
+    object sender,
+    RoutedEventArgs e)
     {
+        AbrirEdicion();
+    }
 
+    private void AbrirEdicion()
+    {
+        Producto? seleccionado =
+            ProductoSeleccionado;
+
+        if (seleccionado == null)
+        {
+            MessageBox.Show(
+                "Seleccione un producto para editarlo.",
+                "Producto requerido",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            return;
+        }
+
+        Producto? productoActual;
+
+        try
+        {
+            productoActual =
+                _productoService.ObtenerProductoPorId(
+                    seleccionado.ProductoId);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                "No fue posible consultar el producto.\n\n" +
+                ex.GetBaseException().Message,
+                "Error de inventario",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+
+            return;
+        }
+
+        if (productoActual == null)
+        {
+            MessageBox.Show(
+                "El producto seleccionado ya no existe.",
+                "Producto no encontrado",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+
+            AplicarFiltros();
+            return;
+        }
+
+        var formulario =
+            new ProductoFormWindow(productoActual)
+            {
+                Owner = this
+            };
+
+        if (formulario.ShowDialog() != true ||
+            formulario.ProductoResultado == null)
+        {
+            return;
+        }
+
+        (bool exito, string mensaje) =
+            _productoService.ActualizarProducto(
+                formulario.ProductoResultado);
+
+        MessageBox.Show(
+            mensaje,
+            exito
+                ? "Producto actualizado"
+                : "No se pudo actualizar",
+            MessageBoxButton.OK,
+            exito
+                ? MessageBoxImage.Information
+                : MessageBoxImage.Warning);
+
+        if (exito)
+        {
+            CargarProductos(
+                productoActual.ProductoId);
+        }
     }
 
     private void DgProductos_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-
+        if (ProductoSeleccionado != null)
+        {
+            AbrirEdicion();
+        }
     }
 }
