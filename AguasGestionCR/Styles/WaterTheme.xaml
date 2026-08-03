@@ -69,37 +69,91 @@
         </Setter>
     </Style>
 
-    <Style x:Key="ModernTextBoxStyle" TargetType="TextBox">
-        <Setter Property="Height" Value="40"/>
-        <Setter Property="FontSize" Value="13"/>
-        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
-        <Setter Property="Background" Value="White"/>
-        <Setter Property="BorderBrush" Value="{StaticResource BorderBrushSoft}"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Padding" Value="11,7"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="SelectionBrush" Value="{StaticResource PrimaryBrush}"/>
+    <Style x:Key="ModernTextBoxStyle"
+       TargetType="TextBox">
+
+        <Setter Property="Height"
+            Value="40"/>
+
+        <Setter Property="MinWidth"
+            Value="80"/>
+
+        <Setter Property="FontSize"
+            Value="13"/>
+
+        <Setter Property="Foreground"
+            Value="{StaticResource TextBrush}"/>
+
+        <Setter Property="Background"
+            Value="White"/>
+
+        <Setter Property="BorderBrush"
+            Value="{StaticResource BorderBrushSoft}"/>
+
+        <Setter Property="BorderThickness"
+            Value="1"/>
+
+        <Setter Property="Padding"
+            Value="12,0"/>
+
+        <Setter Property="VerticalContentAlignment"
+            Value="Center"/>
+
+        <Setter Property="SelectionBrush"
+            Value="{StaticResource PrimaryBrush}"/>
+
+        <Setter Property="CaretBrush"
+            Value="{StaticResource TextBrush}"/>
+
+        <Setter Property="TextOptions.TextFormattingMode"
+            Value="Ideal"/>
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
+
                     <Border x:Name="Border"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="7">
-                        <ScrollViewer x:Name="PART_ContentHost"
-                                      Margin="{TemplateBinding Padding}"/>
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="7"
+                        Padding="{TemplateBinding Padding}">
+
+                        <ScrollViewer
+                        x:Name="PART_ContentHost"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+
                     </Border>
+
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
-                            <Setter TargetName="Border" Property="BorderThickness" Value="1.5"/>
+
+                        <Trigger Property="IsKeyboardFocused"
+                             Value="True">
+
+                            <Setter TargetName="Border"
+                                Property="BorderBrush"
+                                Value="{StaticResource PrimaryBrush}"/>
+
+                            <Setter TargetName="Border"
+                                Property="BorderThickness"
+                                Value="1.5"/>
+
                         </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Border" Property="Background" Value="#F1F4F7"/>
-                            <Setter Property="Foreground" Value="#8B9AAA"/>
+
+                        <Trigger Property="IsEnabled"
+                             Value="False">
+
+                            <Setter TargetName="Border"
+                                Property="Background"
+                                Value="#F1F4F7"/>
+
+                            <Setter Property="Foreground"
+                                Value="#8B9AAA"/>
+
                         </Trigger>
+
                     </ControlTemplate.Triggers>
+
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
