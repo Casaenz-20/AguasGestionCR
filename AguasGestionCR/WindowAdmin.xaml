@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AguasGestionCR"
         mc:Ignorable="d"
-        Title="WindowAdmin" Height="616" Width="1180">
+        Title="WindowAdmin" Height="720" Width="1280">
+
     <Window.Resources>
         <!-- Estilos para botones del menú -->
         <Style x:Key="SidebarButton" TargetType="Button">
@@ -65,17 +66,16 @@
 
                 <!-- Logo y Título -->
                 <StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                    <!-- Puedes colocar tu imagen de logo aquí -->
                     <TextBlock Text="💧" FontSize="30" Foreground="#00A8FF" VerticalAlignment="Center" Margin="0,0,10,0"/>
                     <TextBlock Text="ACUEDUCTO" Foreground="White" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
                 </StackPanel>
 
-                <!-- Opciones del Menú (SIN el botón Clientes) -->
+                <!-- Opciones del Menú -->
                 <StackPanel Grid.Row="1" Margin="0,10,0,0">
-                    <Button Content="🏠   Inicio" Style="{StaticResource ActiveSidebarButton}"/>
-                    <Button Content="⚠️   Reportar avería" Style="{StaticResource SidebarButton}"/>
-                    <Button x:Name="BtnInventario" Content="📦   Inventario" Style="{StaticResource SidebarButton}" Click="BtnInventario_Click"/>
-                    <Button Content="👥   Clientes" Style="{StaticResource SidebarButton}"/>
+                    <Button x:Name="BtnInicio" Content="🏠   Inicio" Style="{StaticResource ActiveSidebarButton}" Click="BtnInicio_Click"/>
+                    <Button x:Name="BtnReportarAveria" Content="⚠️   Reportar avería" Style="{StaticResource SidebarButton}" Click="BtnReportarAveria_Click"/>
+                    <Button Content="📦   Inventario público" Style="{StaticResource SidebarButton}"/>
+                    <Button x:Name="BtnClientes" Content="👥   Clientes" Style="{StaticResource SidebarButton}" Click="BtnCliente_Click"/>
                 </StackPanel>
 
                 <!-- Cerrar Sesión -->
@@ -100,22 +100,21 @@
             <Border Grid.Row="0" Background="#FFFFFF" BorderBrush="#E5E9F2" BorderThickness="0,0,0,1">
                 <Grid Margin="20,0">
                     <TextBlock Text="Portal del Cliente - Gestión del Acueducto" FontSize="16" FontWeight="Bold" Foreground="#333333" VerticalAlignment="Center"/>
-
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                         <TextBlock x:Name="txtFechaActual" FontSize="13" Foreground="#555555" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <!-- Panel de Contenido -->
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <!-- ================= VISTA 1: INICIO ================= -->
+            <ScrollViewer x:Name="ViewInicio" Grid.Row="1" VerticalScrollBarVisibility="Auto" Visibility="Visible">
                 <Grid Margin="15">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <!-- RESUMEN / TARJETAS SUPERIORES -->
+                    <!-- Tarjetas Superiores -->
                     <UniformGrid Grid.Row="0" Columns="4">
                         <Border Style="{StaticResource CardStyle}">
                             <StackPanel>
@@ -124,17 +123,16 @@
                                 <TextBlock Text="Sin reportes pendientes" Foreground="#AAAAAA" FontSize="10"/>
                             </StackPanel>
                         </Border>
-
                     </UniformGrid>
 
-                    <!-- SECCIÓN INFERIOR (Mensaje de bienvenida y Accesos Rápidos + Info) -->
+                    <!-- Sección Central -->
                     <Grid Grid.Row="1" Margin="0,10,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1.8*"/>
                             <ColumnDefinition Width="1.2*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Izquierda: Bienvenida y Acciones Rápidas -->
+                        <!-- Panel Izquierdo: Bienvenida -->
                         <Border Grid.Column="0" Style="{StaticResource CardStyle}">
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -146,10 +144,9 @@
                                 <StackPanel Grid.Row="0">
                                     <TextBlock Text="¡Bienvenido, Estimado Cliente!" FontSize="18" FontWeight="Bold" Foreground="#0A2540"/>
                                     <TextBlock Text="Desde aquí puedes consultar el estado del servicio, ver el catálogo de productos disponibles y enviar reportes de averías de forma rápida." 
-                                             TextWrapping="Wrap" Foreground="#666666" Margin="0,5,0,15"/>
+                                               TextWrapping="Wrap" Foreground="#666666" Margin="0,5,0,15"/>
                                 </StackPanel>
 
-                                <!-- Espacio para Ilustración / Banner -->
                                 <Border Grid.Row="1" Background="#EBF5FB" CornerRadius="8" Height="140" Margin="0,0,0,15">
                                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                         <TextBlock Text="🚰" FontSize="50" HorizontalAlignment="Center"/>
@@ -157,9 +154,7 @@
                                     </StackPanel>
                                 </Border>
 
-                                <!-- Accesos Rápidos Directos (Con botón de Reportar Avería) -->
                                 <UniformGrid Grid.Row="2" Columns="3">
-                                    <!-- Botón 1: Reportar Avería -->
                                     <Button Height="60" Margin="4" Background="#FDEDEC" BorderBrush="#FADBD8" BorderThickness="1">
                                         <StackPanel VerticalAlignment="Center">
                                             <TextBlock Text="⚠️" HorizontalAlignment="Center" FontSize="16"/>
@@ -167,7 +162,6 @@
                                         </StackPanel>
                                     </Button>
 
-                                    <!-- Botón 2: Consultar Inventario -->
                                     <Button Height="60" Margin="4" Background="#E8F8F5" BorderBrush="#D1F2EB" BorderThickness="1">
                                         <StackPanel VerticalAlignment="Center">
                                             <TextBlock Text="📦" HorizontalAlignment="Center" FontSize="16"/>
@@ -175,7 +169,6 @@
                                         </StackPanel>
                                     </Button>
 
-                                    <!-- Botón 3: Ver Guías / Información -->
                                     <Button Height="60" Margin="4" Background="#EBF5FB" BorderBrush="#D4E6F1" BorderThickness="1">
                                         <StackPanel VerticalAlignment="Center">
                                             <TextBlock Text="📊" HorizontalAlignment="Center" FontSize="16"/>
@@ -186,7 +179,7 @@
                             </Grid>
                         </Border>
 
-                        <!-- Derecha: Información del Servicio -->
+                        <!-- Panel Derecho: Información -->
                         <Border Grid.Column="1" Style="{StaticResource CardStyle}">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
@@ -194,7 +187,6 @@
                                     <TextBlock Text="Información del servicio" FontWeight="Bold" FontSize="14" Foreground="#0A2540"/>
                                 </StackPanel>
 
-                                <!-- Item 1 -->
                                 <Border Background="#F8F9F9" Padding="10" CornerRadius="6" Margin="0,0,0,8">
                                     <StackPanel>
                                         <TextBlock Text="Cobertura del servicio" FontWeight="Bold" FontSize="12" Foreground="#333"/>
@@ -202,7 +194,6 @@
                                     </StackPanel>
                                 </Border>
 
-                                <!-- Item 2 -->
                                 <Border Background="#F8F9F9" Padding="10" CornerRadius="6" Margin="0,0,0,8">
                                     <StackPanel>
                                         <TextBlock Text="Continuidad" FontWeight="Bold" FontSize="12" Foreground="#333"/>
@@ -210,7 +201,6 @@
                                     </StackPanel>
                                 </Border>
 
-                                <!-- Item 3 -->
                                 <Border Background="#F8F9F9" Padding="10" CornerRadius="6" Margin="0,0,0,8">
                                     <StackPanel>
                                         <TextBlock Text="Calidad del agua" FontWeight="Bold" FontSize="12" Foreground="#333"/>
@@ -218,16 +208,115 @@
                                     </StackPanel>
                                 </Border>
 
-                                <!-- Mensaje final -->
                                 <Border Background="#EBF5FB" Padding="10" CornerRadius="6" Margin="0,10,0,0">
                                     <TextBlock Text="Nuestro compromiso es brindar un servicio eficiente y de calidad para toda la comunidad." 
-                                             FontSize="11" Foreground="#1B4F72" TextWrapping="Wrap" TextAlignment="Center"/>
+                                               FontSize="11" Foreground="#1B4F72" TextWrapping="Wrap" TextAlignment="Center"/>
                                 </Border>
                             </StackPanel>
                         </Border>
                     </Grid>
                 </Grid>
             </ScrollViewer>
+
+            <!-- ================= VISTA 2: GESTIÓN DE CLIENTES ================= -->
+            <Grid x:Name="ViewClientes" Grid.Row="1" Margin="15" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Título -->
+                <TextBlock Grid.Row="0" Text="Gestión de Clientes" FontSize="22" FontWeight="Bold" Foreground="#0A2540" Margin="0,0,0,15"/>
+
+                <!-- Botones de Acción -->
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,15">
+                    <Button Content="➕   Agregar cliente" Background="#0F4C81" Foreground="White" FontWeight="Bold" Padding="15,8" Margin="0,0,10,0" BorderThickness="0" Cursor="Hand" Click="BtnAgregarCliente_Click"/>
+                    <Button Content="✏️   Editar" Background="#EBF5FB" Foreground="#1B4F72" FontWeight="SemiBold" Padding="15,8" Margin="0,0,10,0" BorderBrush="#AED6F1" BorderThickness="1" Cursor="Hand"/>
+                    <Button Content="🗑️   Eliminar" Background="#FDEDEC" Foreground="#C0392B" FontWeight="SemiBold" Padding="15,8" Margin="0,0,10,0" BorderBrush="#FADBD8" BorderThickness="1" Cursor="Hand"/>
+                    <Button Content="🔍   Limpiar filtros" Background="#F8F9F9" Foreground="#333333" Padding="15,8" BorderBrush="#D5D8DC" BorderThickness="1" Cursor="Hand"/>
+                </StackPanel>
+
+                <!-- Filtros y Tabla -->
+                <Border Grid.Row="2" Background="White" BorderBrush="#D5D8DC" BorderThickness="1" CornerRadius="6" Padding="15">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Filtros -->
+                        <Grid Grid.Row="0" Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Buscar por nombre" FontSize="11" FontWeight="SemiBold" Foreground="#555" Margin="0,0,0,5"/>
+                                <TextBox Foreground="#222" Background="#FAFAFA" Padding="8,6" BorderBrush="#CCCCCC" BorderThickness="1"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                <TextBlock Text="Identificación" FontSize="11" FontWeight="SemiBold" Foreground="#555" Margin="0,0,0,5"/>
+                                <TextBox Foreground="#222" Background="#FAFAFA" Padding="8,6" BorderBrush="#CCCCCC" BorderThickness="1"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                                <TextBlock Text="Número de medidor" FontSize="11" FontWeight="SemiBold" Foreground="#555" Margin="0,0,0,5"/>
+                                <TextBox Foreground="#222" Background="#FAFAFA" Padding="8,6" BorderBrush="#CCCCCC" BorderThickness="1"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="3">
+                                <TextBlock Text="Estado" FontSize="11" FontWeight="SemiBold" Foreground="#555" Margin="0,0,0,5"/>
+                                <ComboBox Padding="8,5" Background="#FAFAFA" BorderBrush="#CCCCCC" BorderThickness="1">
+                                    <ComboBoxItem Content="Todos" IsSelected="True"/>
+                                    <ComboBoxItem Content="Activo"/>
+                                    <ComboBoxItem Content="Inactivo"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Tabla DataGrid -->
+                        <DataGrid Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" 
+                                  GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#EAECEE"
+                                  Background="White" BorderBrush="#E5E9F2" HeadersVisibility="Column">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                                <DataGridTextColumn Header="Nombre completo" Binding="{Binding Nombre}" Width="*"/>
+                                <DataGridTextColumn Header="Identificación" Binding="{Binding Identificacion}" Width="110"/>
+                                <DataGridTextColumn Header="N° medidor" Binding="{Binding Medidor}" Width="100"/>
+                                <DataGridTextColumn Header="Dirección" Binding="{Binding Direccion}" Width="*"/>
+                                <DataGridTextColumn Header="Teléfono" Binding="{Binding Telefono}" Width="110"/>
+                                <DataGridTemplateColumn Header="Estado" Width="90">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#E8F8F5" CornerRadius="4" Padding="6,2" HorizontalAlignment="Center">
+                                                <TextBlock Text="Activo" Foreground="#27AE60" FontSize="11" FontWeight="Bold"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+
+                <!-- Paginación -->
+                <Grid Grid.Row="3" Margin="0,10,0,0">
+                    <TextBlock Text="Mostrando 1 a 8 de 156 clientes" Foreground="#666" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="&lt;&lt;" Padding="8,4" Margin="0,0,5,0" Background="#F2F4F4" BorderBrush="#D5D8DC"/>
+                        <Button Content="1" Background="#0F4C81" Foreground="White" Padding="10,4" Margin="0,0,5,0" BorderThickness="0"/>
+                        <Button Content="2" Padding="10,4" Margin="0,0,5,0" Background="#F2F4F4" BorderBrush="#D5D8DC"/>
+                        <Button Content="3" Padding="10,4" Margin="0,0,5,0" Background="#F2F4F4" BorderBrush="#D5D8DC"/>
+                        <Button Content="&gt;&gt;" Padding="8,4" Background="#F2F4F4" BorderBrush="#D5D8DC"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
 
             <!-- Pie de página (Footer) -->
             <Border Grid.Row="2" Background="#FFFFFF" BorderBrush="#E5E9F2" BorderThickness="0,1,0,0">

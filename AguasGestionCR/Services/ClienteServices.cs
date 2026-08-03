@@ -3,13 +3,13 @@ using AguasGestionCR.Interfaces;
 using AguasGestionCR.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Data;
 
 namespace AguasGestionCR.Services
 {
     internal class ClienteServices : IClientes
     {
         private readonly AcueductoDbContext _context;
+        private readonly EviarReporte _servicioCorreo = new EviarReporte(); // Instancia de la clase de correo de tu compañero
 
         // Inyección de dependencias para evitar crear y destruir contextos manualmente
         public ClienteServices(AcueductoDbContext context)
@@ -22,32 +22,39 @@ namespace AguasGestionCR.Services
             if (cliente == null) throw new ArgumentNullException(nameof(cliente));
             if (string.IsNullOrWhiteSpace(cliente.Identificacion)) throw new ArgumentException("La identificación es obligatoria.");
 
+            if (string.IsNullOrWhiteSpace(cliente.NumeroMedidor))
+            {
+                // Genera un número de medidor automático único, ej: MED-2026-8492
+                string randomNum = new Random().Next(1000, 9999).ToString();
+                cliente.NumeroMedidor = $"MED-{DateTime.Now.Year}-{randomNum}";
+            }
+
             if (cliente.FechaRegistro == default) cliente.FechaRegistro = DateTime.Now;
             cliente.UltimaActualizacion = DateTime.Now;
 
-            var conn = _context.Database.GetDbConnection();
-            using (var cmd = conn.CreateCommand())
+            // Guardar directamente con Entity Framework 
+            _context.Clientes.Add(cliente);
+            _context.SaveChanges();
+
+            // Enviar el correo automáticamente al registrar con éxito (si tiene correo registrado)
+            if (!string.IsNullOrWhiteSpace(cliente.CorreoElectronico))
             {
-                cmd.CommandText = "RegistrarCliente";
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@NombreCompleto", cliente.NombreCompleto));
-                cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@Identificacion", cliente.Identificacion));
-                cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@EstadoPrevista", cliente.EstadoPrevista));
-                cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@NumeroMedidor", (object?)cliente.NumeroMedidor ?? DBNull.Value));
-                cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@Direccion", (object?)cliente.Direccion ?? DBNull.Value));
-                cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@Telefono", (object?)cliente.Telefono ?? DBNull.Value));
-                cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@CorreoElectronico", (object?)cliente.CorreoElectronico ?? DBNull.Value));
-                cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@FechaRegistro", cliente.FechaRegistro));
-                cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@DocumentoCedulaPdf", (object?)cliente.DocumentoCedulaPdf ?? DBNull.Value));
-                cmd.Parameters.Add(DbHelper.CrearParametro(cmd, "@NombreArchivoCedula", (object?)cliente.NombreArchivoCedula ?? DBNull.Value));
-
-                if (conn.State != ConnectionState.Open)
-                    conn.Open();
-
-                var id = cmd.ExecuteScalar();
-                return Convert.ToInt32(id);
+                try
+                {
+                    _servicioCorreo.EnviarCorreoMedidor(
+                        cliente.CorreoElectronico,
+                        cliente.NombreCompleto,
+                        cliente.NumeroMedidor
+                    );
+                }
+                catch (Exception ex)
+                {
+                    // Si el correo falla por falta de internet u otro motivo, no detenemos el registro pero queda la excepción controlada
+                    Console.WriteLine($"Error al enviar correo automático: {ex.Message}");
+                }
             }
+
+            return cliente.ClienteId;
         }
 
         public Cliente ObtenerClientePorId(int id)
@@ -79,7 +86,7 @@ namespace AguasGestionCR.Services
             clienteExistente.Estado = cliente.Estado;
             clienteExistente.UltimaActualizacion = DateTime.Now;
 
-            // Por si se actualiza el documentyo de la cedula,se reemplaza el archivo 
+            // Por si se actualiza el documento de la cédula, se reemplaza el archivo 
             if (cliente.DocumentoCedulaPdf != null)
             {
                 clienteExistente.DocumentoCedulaPdf = cliente.DocumentoCedulaPdf;
@@ -89,21 +96,24 @@ namespace AguasGestionCR.Services
             int filasAfectadas = _context.SaveChanges();
             return filasAfectadas > 0;
         }
-        public List<Cliente> ObtenerClientesActivos()
-        {
-            return _context.Clientes
-                           .Where(c => c.Estado == "Activo") // <-Filtramos solo los clientes activos
-                           .ToList();
-        }
-        public Cliente EliminarCliente(int id)
+
+        public string EliminarCliente(int id)
         {
             var cliente = _context.Clientes
-                          .FirstOrDefault(c => c.ClienteId == id && c.Estado == "Activo");
+                                  .FirstOrDefault(c => c.ClienteId == id && c.Estado == "Activo");
 
             if (cliente == null)
-                throw new Exception("Cliente no encontrado o inactivo");
+                throw new Exception("Cliente no encontrado o ya se encuentra inactivo.");
 
-            return cliente;
+            // Cambiamos el estado del cliente a "Inactivo"
+            cliente.Estado = "Inactivo";
+            cliente.UltimaActualizacion = DateTime.Now;
+
+            // Indicamos a Entity Framework que actualice el registro y guardamos
+            _context.Clientes.Update(cliente);
+            _context.SaveChanges();
+
+            return "Cliente inactivo";
         }
     }
 }

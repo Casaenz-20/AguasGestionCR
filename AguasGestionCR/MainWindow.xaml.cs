@@ -8,6 +8,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AguasGestionCR.Models;
+using AguasGestionCR.Services;
 
 namespace AguasGestionCR
 {
@@ -32,6 +34,7 @@ namespace AguasGestionCR
         {
             ReportView reportView = new ReportView();
             reportView.Show();
+            MessageBox.Show(UsuarioSesion.Rol, UsuarioSesion.correo);
         }
     }
 }
