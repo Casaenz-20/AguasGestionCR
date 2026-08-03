@@ -16,6 +16,7 @@ public partial class ProductosWindow : Window
 {
     private readonly IProductoService _productoService;
     private List<Producto> _productosMostrados = new();
+    private bool _consultaRealizada;
 
     public ProductosWindow()
         : this(new ProductoService())
@@ -144,22 +145,28 @@ public partial class ProductosWindow : Window
     {
         DgProductos.SelectedItem = null;
 
-        if (!HayCriteriosConsulta())
-        {
-            PrepararListadoVacio();
-            return;
-        }
+        _consultaRealizada = true;
 
         CargarProductos();
     }
 
     private void ActualizarResultadoListado()
     {
-        int cantidadVisible = _productosMostrados.Count;
+         int cantidadVisible =
+        _productosMostrados.Count;
 
-        TxtResultadoListado.Text = cantidadVisible == 1
-            ? "Mostrando 1 producto"
-            : $"Mostrando {cantidadVisible} productos";
+        if (cantidadVisible == 0)
+        {
+            TxtResultadoListado.Text =
+                "No se encontraron productos con los criterios seleccionados.";
+
+            return;
+        }
+
+        TxtResultadoListado.Text =
+            cantidadVisible == 1
+                ? "Mostrando 1 producto"
+                : $"Mostrando {cantidadVisible} productos";
     }
 
     /// <summary>
@@ -239,70 +246,21 @@ public partial class ProductosWindow : Window
     object sender,
     RoutedEventArgs e)
     {
-        try
-        {
-            ActualizarResumen();
+        int? productoId =
+        ProductoSeleccionado?.ProductoId;
 
-            if (!HayCriteriosConsulta())
-            {
-                PrepararListadoVacio();
-                return;
-            }
+        _consultaRealizada = true;
 
-            int? productoId =
-                ProductoSeleccionado?.ProductoId;
-
-            CargarProductos(productoId);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(
-                "No fue posible actualizar el inventario.\n\n" +
-                ex.GetBaseException().Message,
-                "Error al actualizar",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
-        }
+        CargarProductos(productoId);
     }
 
 
-    private bool HayCriteriosConsulta()
-    {
-        string busqueda =
-            TxtBusqueda.Text.Trim();
-
-        string categoria =
-            CmbCategoria.SelectedItem?.ToString()
-            ?? "Todas";
-
-        string estado =
-            ObtenerContenidoCombo(CmbEstado)
-            ?? "Todos";
-
-        bool tieneBusqueda =
-            !string.IsNullOrWhiteSpace(busqueda);
-
-        bool tieneCategoria =
-            !categoria.Equals(
-                "Todas",
-                StringComparison.OrdinalIgnoreCase);
-
-        bool tieneEstado =
-            !estado.Equals(
-                "Todos",
-                StringComparison.OrdinalIgnoreCase);
-
-        bool soloStockBajo =
-            ChkSoloStockBajo.IsChecked == true;
-
-        return tieneBusqueda ||
-               tieneCategoria ||
-               tieneEstado ||
-               soloStockBajo;
-    }
+  
 
     private void PrepararListadoVacio()
     {
+        _consultaRealizada = false;
+
         _productosMostrados =
             new List<Producto>();
 
@@ -310,8 +268,8 @@ public partial class ProductosWindow : Window
         DgProductos.SelectedItem = null;
 
         TxtResultadoListado.Text =
-            "Ingrese un código, nombre o seleccione " +
-            "un filtro para consultar productos.";
+            "Presione Buscar para consultar todos los productos " +
+            "o seleccione los filtros que desea aplicar.";
 
         ActualizarBotonesSeleccion();
     }
@@ -423,7 +381,7 @@ public partial class ProductosWindow : Window
                 return;
             }
 
-            if (HayCriteriosConsulta())
+            if (_consultaRealizada)
             {
                 CargarProductos(
                     nuevoProducto.ProductoId);
@@ -542,5 +500,17 @@ public partial class ProductosWindow : Window
         {
             AbrirEdicion();
         }
+    }
+
+    private void ChkSoloStockBajo_Changed(
+    object sender,
+    RoutedEventArgs e)
+    {
+        if (!IsLoaded)
+        {
+            return;
+        }
+
+        AplicarFiltros();
     }
 }

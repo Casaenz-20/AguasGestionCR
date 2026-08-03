@@ -356,14 +356,16 @@
 
                             <!-- Solo stock bajo -->
                             <CheckBox x:Name="ChkSoloStockBajo"
-                                      Grid.Row="1"
-                                      Grid.Column="0"
-                                      Grid.ColumnSpan="3"
-                                      Content="Mostrar únicamente productos con stock bajo"
-                                      Foreground="{StaticResource TextBrush}"
-                                      FontSize="12"
-                                      VerticalAlignment="Center"
-                                      Margin="0,15,0,0"/>
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="3"
+                                        Content="Mostrar únicamente productos activos con stock bajo"
+                                        Foreground="{StaticResource TextBrush}"
+                                        FontSize="12"
+                                        VerticalAlignment="Center"
+                                        Margin="0,15,0,0"
+                                        Checked="ChkSoloStockBajo_Changed"
+                                        Unchecked="ChkSoloStockBajo_Changed"/>
 
                             <!-- Botones de consulta -->
                             <StackPanel Grid.Row="1"
