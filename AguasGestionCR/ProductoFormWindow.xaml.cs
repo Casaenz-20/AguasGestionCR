@@ -7,8 +7,9 @@ using System.Windows.Media;
 namespace AguasGestionCR;
 
 /// <summary>
-/// Formulario visual temporal. Valida y devuelve un Producto en memoria.
-/// El guardado real en SQL Server se conectará después mediante IProductoService.
+/// Formulario utilizado para registrar o editar un producto.
+/// Valida los datos y devuelve el producto a ProductosWindow,
+/// donde ProductoService realiza la operación en SQL Server.
 /// </summary>
 public partial class ProductoFormWindow : Window
 {
@@ -38,7 +39,15 @@ public partial class ProductoFormWindow : Window
         }
 
         ActualizarVistaStock();
-        TxtCodigo.Focus();
+
+        if (EsEdicion)
+        {
+            TxtNombre.Focus();
+        }
+        else
+        {
+            TxtCodigo.Focus();
+        }
     }
 
     private void CargarListas()
@@ -71,7 +80,12 @@ public partial class ProductoFormWindow : Window
         TxtTitulo.Text = "Registrar producto";
         TxtSubtitulo.Text =
             "Ingrese la información del producto que formará parte del inventario.";
+
         BtnGuardar.Content = "Guardar producto";
+
+        TxtCodigo.IsReadOnly = false;
+        TxtCodigo.ToolTip =
+            "Código único utilizado para identificar el producto.";
 
         TxtCodigo.Clear();
         TxtNombre.Clear();
@@ -82,6 +96,7 @@ public partial class ProductoFormWindow : Window
         DtpFechaIngreso.SelectedDate = DateTime.Today;
         CmbEstado.SelectedIndex = 0;
         TxtDescripcion.Clear();
+
         OcultarError();
     }
 
@@ -92,13 +107,16 @@ public partial class ProductoFormWindow : Window
         TxtTitulo.Text = "Editar producto";
         TxtSubtitulo.Text =
             "Modifique la información necesaria y guarde los cambios.";
+
         BtnGuardar.Content = "Guardar cambios";
+
+        TxtCodigo.IsReadOnly = true;
+        TxtCodigo.ToolTip =
+            "El código se conserva durante la edición para evitar cambiar la identificación del producto.";
 
         TxtCodigo.Text = producto.CodigoProducto;
         TxtNombre.Text = producto.Nombre;
-        SeleccionarValorLista(
-                              CmbCategoria,
-                              producto.Categoria);
+
 
         SeleccionarValorLista(
                               CmbUnidad,
@@ -151,11 +169,22 @@ public partial class ProductoFormWindow : Window
     {
         producto = null;
 
-        string codigo = TxtCodigo.Text.Trim().ToUpperInvariant();
-        string nombre = TxtNombre.Text.Trim();
-        string categoria = CmbCategoria.Text.Trim();
-        string unidad = CmbUnidad.Text.Trim();
-        string estado = ObtenerEstadoSeleccionado();
+        string codigo =
+            TxtCodigo.Text.Trim().ToUpperInvariant();
+
+        string nombre =
+            TxtNombre.Text.Trim();
+
+        string categoria =
+            CmbCategoria.SelectedItem?.ToString()?.Trim()
+            ?? string.Empty;
+
+        string unidad =
+            CmbUnidad.SelectedItem?.ToString()?.Trim()
+            ?? string.Empty;
+
+        string estado =
+            ObtenerEstadoSeleccionado();
 
         if (string.IsNullOrWhiteSpace(codigo))
         {
@@ -263,44 +292,86 @@ public partial class ProductoFormWindow : Window
     private void ActualizarVistaStock()
     {
         bool cantidadValida =
-            TryLeerDecimal(TxtCantidad.Text, out decimal cantidad);
+       TryLeerDecimal(
+           TxtCantidad.Text,
+           out decimal cantidad);
+
         bool minimoValido =
-            TryLeerDecimal(TxtCantidadMinima.Text, out decimal minimo);
+            TryLeerDecimal(
+                TxtCantidadMinima.Text,
+                out decimal minimo);
 
         if (!cantidadValida || !minimoValido)
         {
-            TxtTituloStock.Text = "Stock pendiente";
+            TxtTituloStock.Text =
+                "Stock pendiente";
+
+            TxtDetalleStock.Text =
+                "Ingrese una cantidad actual y una cantidad mínima válidas.";
+
             TxtResumenStock.Text =
-                "Ingrese la cantidad actual y la cantidad mínima.";
-            TxtDetalleStock.Text = string.Empty;
-            TxtIconoStock.Text = "?";
+                string.Empty;
+
+            TxtIconoStock.Text =
+                "?";
+
             BordeEstadoStock.Background =
                 (Brush)FindResource("SkyBrush");
+
+            TxtTituloStock.Foreground =
+                (Brush)FindResource("PrimaryBrush");
+
+            TxtIconoStock.Foreground =
+                (Brush)FindResource("PrimaryBrush");
+
             return;
         }
 
-        bool stockBajo = cantidad <= minimo;
+        bool stockBajo =
+            cantidad <= minimo;
 
         if (stockBajo)
         {
-            TxtTituloStock.Text = "Stock bajo";
-            TxtResumenStock.Text =
+            TxtTituloStock.Text =
+                "Stock bajo";
+
+            TxtDetalleStock.Text =
                 "La existencia actual requiere atención o reposición.";
-            TxtIconoStock.Text = "!";
+
+            TxtIconoStock.Text =
+                "!";
+
             BordeEstadoStock.Background =
                 (Brush)FindResource("WarningSoftBrush");
+
+            TxtTituloStock.Foreground =
+                (Brush)FindResource("WarningBrush");
+
+            TxtIconoStock.Foreground =
+                (Brush)FindResource("WarningBrush");
         }
         else
         {
-            TxtTituloStock.Text = "Stock disponible";
-            TxtResumenStock.Text =
-                "La existencia se encuentra por encima del mínimo.";
-            TxtIconoStock.Text = "✓";
+            TxtTituloStock.Text =
+                "Stock disponible";
+
+            TxtDetalleStock.Text =
+                "La existencia se encuentra por encima del mínimo establecido.";
+
+            TxtIconoStock.Text =
+                "✓";
+
             BordeEstadoStock.Background =
                 (Brush)FindResource("SuccessSoftBrush");
+
+            TxtTituloStock.Foreground =
+                (Brush)FindResource("SuccessBrush");
+
+            TxtIconoStock.Foreground =
+                (Brush)FindResource("SuccessBrush");
         }
 
-        TxtDetalleStock.Text =
+        TxtResumenStock.Text =
             $"Actual: {cantidad:N2}   ·   Mínimo: {minimo:N2}";
     }
 

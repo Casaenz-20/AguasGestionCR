@@ -1,4 +1,4 @@
-using AcueductoApp.Views;
+
 using AguasGestionCR.Models;
 using AguasGestionCR.Services;
 using System.Windows;
@@ -380,28 +380,7 @@ public partial class ProductosWindow : Window
         Close();
     }
 
-    private void BtnCerrarSesion_Click(object sender, RoutedEventArgs e)
-    {
-        MessageBoxResult resultado = MessageBox.Show(
-            "¿Desea cerrar la sesión actual?",
-            "Cerrar sesión",
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Question);
-
-        if (resultado != MessageBoxResult.Yes)
-        {
-            return;
-        }
-
-        var login = new LoginWindow();
-        login.Show();
-        Close();
-    }
-
-    private void Button_Click(object sender, RoutedEventArgs e)
-    {
-
-    }
+   
 
     private void BtnNuevo_Click(
     object sender,

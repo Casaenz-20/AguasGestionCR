@@ -45,7 +45,8 @@ namespace AguasGestionCR.Services
             if (soloStockBajo)
             {
                 consulta = consulta.Where(producto =>
-                    producto.Cantidad <= producto.CantidadMinima);
+                           producto.Estado == "Activo" &&
+                           producto.Cantidad <= producto.CantidadMinima);
             }
 
             return consulta
