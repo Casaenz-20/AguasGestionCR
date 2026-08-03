@@ -25,16 +25,32 @@ namespace AguasGestionCR
             txtFechaActual.Text = $"📅  {DateTime.Now.ToString("dd/MM/yyyy")}";
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void btnReportarAveria_Click(object sender, RoutedEventArgs e)
         {
             ReportView reportView = new ReportView();
             reportView.Show();
             MessageBox.Show(UsuarioSesion.Rol, UsuarioSesion.correo);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult resultado =
+           MessageBox.Show(
+          "¿Desea cerrar la sesión actual?",
+          "Cerrar sesión",
+          MessageBoxButton.YesNo,
+          MessageBoxImage.Question);
+
+            if (resultado != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            var login =
+                new AcueductoApp.Views.LoginWindow();
+
+            login.Show();
+            Close();
         }
     }
 }
