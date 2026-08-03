@@ -47,8 +47,50 @@ namespace AguasGestionCR.Services
 
                 smtp.Send(mail);
             }
+
+
+
+
+
+
+
+
         }
 
+
+        public void EnviarCorreoMedidor(string correoDestino, string nombreCliente, string numeroMedidor)
+        {
+            if (string.IsNullOrWhiteSpace(correoDestino)) return;
+
+            MailMessage mail = new MailMessage();
+            mail.To.Add(new MailAddress(correoDestino.Trim()));
+            mail.From = new MailAddress(_correoEmpresa); // Usa directamente el correo de la empresa como remitente
+
+            mail.Subject = "Bienvenido a AguasGestionCR - Su número de medidor";
+            mail.Body = $"Hola {nombreCliente},\n\n" +
+                        $"Su registro en AguasGestionCR se ha completado exitosamente.\n\n" +
+                        $"Su número de medidor asignado es: {numeroMedidor}\n\n" +
+                        $"Puede utilizar este número para registrarse en nuestra aplicación móvil/web.\n\n" +
+                        $"Atentamente,\nGestión de Acueducto";
+
+            using (SmtpClient smtp = new SmtpClient(_hostSmtp, _puertoSmtp))
+            {
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential(_correoEmpresa, _contrasenaApp);
+                smtp.EnableSsl = true;
+                smtp.Send(mail);
+            }
+        }
+
+
+
     }
+
+
+
+
+
+
+
 }
 

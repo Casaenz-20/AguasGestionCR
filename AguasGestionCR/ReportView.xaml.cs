@@ -25,7 +25,7 @@ namespace AguasGestionCR
             InitializeComponent();
         }
 
-       
+
 
         private void BtnCancelar_Click(object sender, RoutedEventArgs e)
         {
@@ -38,7 +38,7 @@ namespace AguasGestionCR
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
-            if (UsuarioSesion.Rol == "Usuario")
+            if (UsuarioSesion.Rol == "Cliente")
             {
                 txtCorreo.Text = "aguagestioncr@gmail.com";
                 txtCorreo.IsReadOnly = true;
@@ -47,63 +47,71 @@ namespace AguasGestionCR
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if(string.IsNullOrWhiteSpace(txtDescripcion.Text) || string.IsNullOrWhiteSpace(txtMedidor.Text) || cmbTipoAveria.SelectedItem == null || UsuarioSesion.Rol == "Administrador")
-            {
+            if (string.IsNullOrWhiteSpace(txtDescripcion.Text) ||
+                 string.IsNullOrWhiteSpace(txtMedidor.Text) ||
+                 cmbTipoAveria.SelectedItem == null)
+             {
                 MessageBox.Show("Por favor, complete todos los campos obligatorios.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            else if (UsuarioSesion.Rol == "Usuario")
+
+            // 2. Extracción limpia de datos
+            string tipoAveria = (cmbTipoAveria.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? cmbTipoAveria.SelectedItem.ToString();
+            string descripcion = txtDescripcion.Text.Trim();
+            string medidor = txtMedidor.Text.Trim();
+            string sector = txtSector.Text.Trim();
+            string direccion = txtDireccion.Text.Trim();
+
+            // 3. Ejecución por Roles
+            if (UsuarioSesion.Rol == "Cliente")
             {
                 try
                 {
-                    if (cmbTipoAveria.SelectedItem == null)
-                    {
-                        MessageBox.Show("Por favor, seleccione un tipo de avería.", "Campo requerido", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        return; // Detener la ejecución si no ha seleccionado nada
-                    }
-
-                    // 2. Extracción segura de valores
                     string correoContacto = UsuarioSesion.correo;
-                    string descripcion = txtDescripcion.Text.Trim();
-                    string medidor = txtMedidor.Text.Trim();
-                    string tipoAveria = ((ComboBoxItem)cmbTipoAveria.SelectedItem).Content.ToString();
-                    string sector = txtSector.Text.Trim();
-                    string direccion = txtDireccion.Text.Trim();
 
-                    // 3. Enviar el reporte a través de la clase de servicio
                     ReportesUser reporte = new ReportesUser();
-                    reporte.EnviarReporte(correoContacto, descripcion, medidor, tipoAveria, sector, direccion);
 
-                    // 4. Confirmación al usuario
+                    // Fix: Mantenemos el orden exacto de ReportesUser.EnviarReporte(...)
+                    reporte.EnviarReporte(descripcion, medidor, tipoAveria, sector, direccion, correoContacto);
+
                     MessageBox.Show("Reporte enviado correctamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
-
                 }
-                catch
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Error al enviar el reporte. Por favor, inténtelo de nuevo más tarde.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Error al enviar el reporte. Por favor, inténtelo de nuevo más tarde.\nDetalle: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            else if(UsuarioSesion.Rol == "Administrador")
+            else if (UsuarioSesion.Rol == "Administrador")
             {
+                if (string.IsNullOrWhiteSpace(txtCorreo.Text))
+                {
+                    MessageBox.Show("Por favor, ingrese el correo de destino.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    txtCorreo.Focus();
+                    return;
+                }
+
                 try
                 {
-                    EviarReporte reporte = new EviarReporte();
-                    string correo = txtCorreo.Text;
-                    string descripcion = txtDescripcion.Text;
-                    string medidor = txtMedidor.Text;
-                    string tipoAveria = ((ComboBoxItem)cmbTipoAveria.SelectedItem).Content.ToString();
-                    string sector = txtSector.Text;
-                    string direccion = txtDireccion.Text;
+                    string correo = txtCorreo.Text.Trim();
 
+                    EviarReporte reporte = new EviarReporte();
+
+   
                     reporte.EnviarReporteAveria(correo, descripcion, medidor, tipoAveria, sector, direccion);
+
+                    MessageBox.Show("Reporte de avería enviado correctamente por el administrador.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Error al enviar el reporte. Por favor, inténtelo de nuevo más tarde.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Error al enviar el reporte de administrador.\nDetalle: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+            else
+            {
+                MessageBox.Show("No se reconoce el rol del usuario actual.", "Error de Autenticación", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
-            
+
         }
     }
 }

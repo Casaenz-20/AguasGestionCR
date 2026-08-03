@@ -6,12 +6,7 @@ namespace AguasGestionCR.Local_cofig
 {
     public static class Local_config
     {
-        public static string CadenaConexion => "Server=localhost;" +
-            "Database=AcueductoDB;" +
-            "Integrated Security=True;" +
-            "TrustServerCertificate=True;" +
-            "Encrypt=True;" +
-            "MultipleActiveResultSets=True;";
+        public static string CadenaConexion => "Server=SEBASTIÁN\\SQLEXPRESS;Database=AcueductoDB;Integrated Security=True;TrustServerCertificate=True;";
 
 
 
